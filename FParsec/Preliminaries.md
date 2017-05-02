@@ -1,21 +1,26 @@
-#Preliminaries
+# Вступление
 
-FParsec is built as two DLLs: `FParsec.dll` and `FParsecCS.dll`. To use FParsec in your project, you can either let [NuGet](http://nuget.org) install one of the [NuGet packages](), or you can build the two FParsec DLLs from source. The easiest way to build FParsec from source is using the Visual Studio solution files in the `=Build/VS..` folders of the [source code package](), e.g. in [=Build/VS11] for Visual Studio 2012. Any project that uses FParsec has to reference both DLLs. See [Download and Installation]() for more details.
+`FParsec` собран как две DLL: `FParsec.dll` и `FParsecCS.dll`. Для использования `FParsec` в своем проекте, вы можете либо установить один из `NuGet` пакетов либо собрать `FParsec` из исходников.
+Простейший способ собрать `FParsec` из исходников это использовать файл-решение `VS` в папке __=Build/VS__ из [архива исходного кода](https://github.com/stephan-tolksdorf/fparsec/archive/master.zip). Например, __Build/VS11__ для Visual Studio 2012.
+Каждый проект, который использует `FParsec` должен ссылаться на обе DLL. Смотрите [download and installation](http://www.quanttec.com/fparsec/download-and-installation.html) для того, чтобы узнать больше подробностей.
 
-All FParsec types and modules are declared in the `FParsec` namespace. This namespace contains some basic classes (such as `CharStream` and `Reply`) and four F# modules, namely
+Все типы и модули `FParsec` объявлены в пространстве имен `FParsec`. Это пространство имен содержит несколько базовых классов (таких как `CharStream` и `Reply`) и четыре модуля, а именно:
 
-- `Primitives`, containing basic type definitions and parser combinators
-- `CharParsers`, containing parsers for chars, strings and numbers, and functions for applying parsers to input streams
-- `Error`, containing types and helper functions for creating, processing and formatting parser error messages
-- `StaticMapping`, containing functions for compiling static key-value mappings into optimized functions.
+* [`Primitives`](http://www.quanttec.com/fparsec/reference/primitives.html) - содержит определение основных типов и парсер-комбинаторов.
+* [`CharParsers`](http://www.quanttec.com/fparsec/reference/charparsers.html) - содержит парсеры для символов (`char`), строк (`string`), чисел и функций для применения парсеров к входному потоку.
+* [`Error`](http://www.quanttec.com/fparsec/reference/primitives.html#members.Error) - содержит типы и вспомогательные функции для создания, обработки и форматирования сообщений об ошибках.
+* [`StaticMapping`](http://www.quanttec.com/fparsec/reference/staticmapping.html) - содержит функции для компилирования статических преобразований ключ-значение в оптимизированные функции.
 
-All code snippets in this tutorial assume that you've opened the `FParsec` namespace:
 
-```fsharp
+Во всех сниппетах кода из этого туториала предполагается, что вы открыли пространство имен `FParsec`:
+
+``` fsharp 
 open FParsec
 ```
 
-Opening the `FParsec` namespace also automatically opens the `Primitives`, `CharParsers` and `Error` modules.
+Открытие пространства имен `FParsec` также автоматически откроет модули `Primitives`, `CharParsers` и `Error`.
 
+**_Заметка_**
 
->All code snippets in this tutorial are contained in the [=Samples/Tutorial] project. Having this project open while reading the tutorial can be quite helpful. For example, you can hover the mouse over an identifier to get an Intellisense popup with the inferred type. And if you're curious how a library function is implemented, you can click the /Go to definition/ context menu option to view its source code.
+> Весь код используемый в туториале находится в папке [Tutorial](https://github.com/stephan-tolksdorf/fparsec/tree/master/Samples/Tutorial). Открытие проекта во время чтения туториала может быть довольно полезным. 
+> Например, вы можете навести мышь над идентификатором, чтобы получить подсказку от Intellisense с выведенным типом. Если вам будет любопытно как реализована функция в библиотеке, вы сможете кликнуть по варианту `Перейти к определению` из контекстного меню для просмотра исходного кода.
