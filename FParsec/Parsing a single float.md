@@ -1,38 +1,37 @@
-# Parsing a single float
+# Разбор единственного числа с плавающей точкой
 
-Parsing input with FParsec involves two steps:
+Парсинг с помощью `FParsec` состоит из двух шагов:
 
-1. Building a parser
-2. Applying the parser to the input.
+1. Построение парсера
+2. Применение парсера к входным данным
 
-Let's start with a simple example: parsing a single floating-point number in a string.
-
-In this case the first step, building the parser, is trivial, because the [`CharParsers`](http://www.quanttec.com/fparsec/reference/charparsers.html) module already comes with a built-in float parser:
+Давайте начнем с простого примера - разбор единственного числа с плавающей точкой из строки.
+В этом случае первый шаг будет тривиальным, так как модуль [`CharParsers`](http://www.quanttec.com/fparsec/reference/charparsers.html) уже включает парсер чисел с плавающей точкой:
 
 ```fsharp
-val pfloat: Parser<float,'u>
+val pfloat : Parser<float,'u>
 ```
 
-The generic type [`Parser<'Result,'UserState>`](http://www.quanttec.com/fparsec/reference/primitives.html#members.Parser) is the type of all parsers in FParsec. 
-If you follow the hyperlink into the reference, you'll see that `Parser` is a type abbreviation for a function type. 
-However, at this point we don't need to go into the details of the `Parser` type. It's enough to note that the first type argument represents the type of the parser result. 
-Thus, in the case of [`pfloat`](http://www.quanttec.com/fparsec/reference/charparsers.html#members.pfloat) the type tells us that if the parser succeeds it returns a floating-point number of type `float`. 
-We won't use a "user state" in this tutorial, so you can just ignore the second type argument for the time being.
+Обобщенный тип [`Parser<'Result,'UserState>`](http://www.quanttec.com/fparsec/reference/primitives.html#members.Parser) это тип всех парсеров из `FParsec`. 
+Если вы перейдете по ссылке к справочнику, то вы увидите, что `Parser` это псевдоним для типа-функции. 
+Однако сейчас нам не нужно вдаваться в детали типа `Parser`. Достаточно отметить, что первый аргумент типа представляет тип результата парсинга. 
+Таким образом, в случае с [`pfloat`](http://www.quanttec.com/fparsec/reference/charparsers.html#members.pfloat), тип говорит нам, что если разбор будет успешным, то парсер вернет число с плавающей точкой типа `float`. 
+Мы не будем использовать `UserState` в этом туториале, поэтому поначалу вы можете просто игнорировать второй аргумент.
 
-To apply the `pfloat` parser to a string, we can use the [`run`](http://www.quanttec.com/fparsec/reference/charparsers.html#members.run) function from the `CharParsers` module:
+Для того, чтобы применить парсер `pfloat` к строке мы можем использовать функцию [`run`](http://www.quanttec.com/fparsec/reference/charparsers.html#members.run) из модуля `Charparsers`:
 
 ```fsharp
 val run: Parser<'Result, unit> -> string -> ParserResult<'Result,unit>
 ```
 
-`run` is the simplest function out of [several](http://www.quanttec.com/fparsec/reference/charparsers.html#interface.runparser-functions) provided by the `CharParsers` module for running parsers on input. 
-Other functions allow you, for example, to run parsers directly on the contents of a file or a `System.IO.Stream`.
+`run` - простейшая из [нескольких](http://www.quanttec.com/fparsec/reference/charparsers.html#interface.runparser-functions) функций, предоставляемых модулем `CharParsers` для запуска парсинга ко входным данным.
+Другие функций позволяют вам, например, запустить парсер непосредственно к содержимому файла или для `System.IO.Stream`.
 
-`run` applies the parser passed as the first argument to the string passed as the second argument and returns the return value of the parser in form of a `ParserResult` value. 
-The [`ParserResult`](http://www.quanttec.com/fparsec/reference/charparsers.html#members.ParserResult) type is a discriminated union type with the two cases:  `Success` and `Failure`. 
-In case the parser succeeds, the `ParserResult` value contains the result value, otherwise it contains an error message.
+`run` применяет парсер, переданный в качестве первого аргумента функции к строке, передаваемой вторым аргументом и возвращает результат парсинга в виде `ParseResult`. 
+Тип [`ParserResult`](http://www.quanttec.com/fparsec/reference/charparsers.html#members.ParserResult) это размеченное объединение с двумя вариантами - `Success и Failure` (успех и неудача соответственно). 
+В случае удачного разбора, `ParseResult` содержит результирующее значение, в противном случае он содержит сообщение об ошибке.
 
-To simplify testing we write a little helper function that prints the result value or error message:
+Для упрощения тестирования мы напишем небольшую вспомогательную функцию, которая выводит значение или сообщение об ошибке:
 
 ```fsharp
 let test p str =
@@ -41,24 +40,25 @@ let test p str =
     | Failure(errorMsg, _, _) -> printfn "Failure: %s" errorMsg
 ```
 
-With this helper function in place, we can test `pfloat` by executing
+Теперь мы можем протестировать `pfloat` выполнив
 
 ```fsharp
-test pfloat "1.25"
+test pfloat "1.25"``
 ```
-which produces the output
+
+что даст следующий результат 
 
 ```fsharp
 Success: 1.25
 ```
 
-Testing `pfloat` with a number literal that has an invalid exponent
+Тестирование `pfloat` с числом, имеющим некорректную экспоненту
 
 ```fsharp
 test pfloat "1.25E 3"
 ```
 
-yields the error message
+выводит сообщение об ошибке
 
 ```fsharp
 Failure: Error in Ln: 1 Col: 6
