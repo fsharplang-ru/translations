@@ -25,7 +25,7 @@
 11. Parsing JSON _(не переведено)_
 12. What now? _(не переведено)_
 
-[01-preliminaries]: 1.%20Preliminaties.md
+[01-preliminaries]: 1.%20Preliminaries.md
 [02-parsing-a-single-float]: 2.%20Parsing%20a%20single%20float.md
 
 [original]: http://www.quanttec.com/fparsec/tutorial.html
