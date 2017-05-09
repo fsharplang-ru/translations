@@ -15,7 +15,7 @@
 1. [Подготовка к работе][01-preliminaries]
 2. [Разбор единственного числа с плавающей точкой][02-parsing-a-single-float]
 3. [Разбор числа с пллавающей точкой между скобками][03-parsing-a-float-between-brackets]
-4. Abstracting parsers _(не переведено)_
+4. [Абстрактные парсеры][04-abstracting-parsers]
 5. Parsing a list of floats _(не переведено)_
 6. Handling whitespace _(не переведено)_
 7. Parsing string data _(не переведено)_
@@ -28,5 +28,6 @@
 [01-preliminaries]: 1.%20Preliminaries.md
 [02-parsing-a-single-float]: 2.%20Parsing%20a%20single%20float.md
 [03-parsing-a-float-between-brackets]: 3.%20Parsing%20a%20float%20between%20brackets.md
+[04-abstracting-parsers]: 4.%20Abstracting%20parsers.md
 
 [original]: http://www.quanttec.com/fparsec/tutorial.html
