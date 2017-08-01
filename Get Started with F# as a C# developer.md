@@ -77,7 +77,7 @@ let square x = x * x
 let getSquares items =
     items |> List.map square
 	
-let lst = [ 1; 2; 3; 4; 5 ] // Создать спискок в F#
+let lst = [ 1; 2; 3; 4; 5 ] // Создать список в F#
 
 printfn "Квадрат числа %A равен %A" lst (getSquares lst)
 ```
