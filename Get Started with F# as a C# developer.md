@@ -192,7 +192,7 @@ let getOddSquares items =
 
 Использование конвейерного оператора -- это очень весело, и довольно редко можно увидеть F# код, которые не использует его. Это обычно почти самая любимая всеми возможность в списке F#.
 
-# Типа в F#
+# Типы в F#
 
 Из-за того, что F# -- это язык платформы .NET, он использует те же примитивные типы, что и C#: `string`, `int` и так далее. Он также имеет .NET объекты и поддерживает четыре основных столпа объектно-ориентированного программирования. Так же присутствуют [кортежи](https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/tuples) (tuples). F# также предоставляет два основных типа, которые невозможно найти в C#: [записи](https://docs.microsoft.com/ru-ru/dotnet/fsharp/language-reference/records) (records) и [размеченные объединения](https://docs.microsoft.com/ru-ru/dotnet/fsharp/language-reference/discriminated-unions) (discriminated unions).
 
