@@ -418,6 +418,12 @@ twoTuple person1 temp worker
 
 И наконец, сообщество F# очень дружелюбно к начинающим. Есть очень активный чат в Slack, поддерживаемый F# Software Foundation, с комнатами для начинающих, к которым вы [можете свободно присоединиться][fssf-slack]. Мы настоятельно рекомендуем вам это сделать!
 
+Не забудьте посетить сайт [русскоязычного сообщества F#][fsharplang-ru]! Если у вас возникнут вопросы по изучению языка, мы будем рады обсудить их в чатах:
+
+- комната `#ru_general` в [Slack-чате F# Software Foundation][fssf-slack]
+- [чат в Telegram][tg]
+- [чат в Gitter][gitter]
+
 [why-you-should-use]: https://blogs.msdn.microsoft.com/dotnet/2017/05/31/why-you-should-use-f/
 [statements]: https://ru.wikipedia.org/wiki/Оператор_(программирование)
 [expressions]: https://ru.wikipedia.org/wiki/Выражение_(информатика)
@@ -451,3 +457,6 @@ twoTuple person1 temp worker
 [fssf-slack]: http://foundation.fsharp.org/join
 [scott]: https://twitter.com/ScottWlaschin
 [tour]: https://docs.microsoft.com/ru-ru/dotnet/fsharp/tour
+[fsharplang-ru]: http://fsharplang.ru
+[tg]: https://t.me/Fsharp_chat
+[gitter]: http://gitter.im/fsharplang_ru
