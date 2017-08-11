@@ -424,6 +424,9 @@ twoTuple person1 temp worker
 - [чат в Telegram][tg]
 - [чат в Gitter][gitter]
 
+## Об авторах перевода
+<img src="http://fsharplang.ru/img/min_logo.png" width="128" height="128" style="float: right;" /> Статья переведена усилиями [русскоязычного сообщества F#-разработчиков][fsharplang-ru]. Мы также благодарим [_@schvepsss_][schvepsss] за подготовку данной статьи к публикации.
+
 [why-you-should-use]: https://blogs.msdn.microsoft.com/dotnet/2017/05/31/why-you-should-use-f/
 [statements]: https://ru.wikipedia.org/wiki/Оператор_(программирование)
 [expressions]: https://ru.wikipedia.org/wiki/Выражение_(информатика)
@@ -457,9 +460,8 @@ twoTuple person1 temp worker
 [fssf-slack]: http://foundation.fsharp.org/join
 [scott]: https://twitter.com/ScottWlaschin
 [tour]: https://docs.microsoft.com/ru-ru/dotnet/fsharp/tour
-[fsharplang-ru]: http://fsharplang.ru
 [tg]: https://t.me/Fsharp_chat
 [gitter]: http://gitter.im/fsharplang_ru
-
-## Благодарим за перевод
-ЗДЕСЬ НУЖНА КРАТКАЯ ИНФОРМАЦИЯ О ТЕХ, КТО ПЕРЕВОДИЛ И ЖЕЛАТЕЛЬНО ФОТО. ТАКЖЕ МОЖНО ВСТАВИТЬ РЕЛЕВАНТНЫЕ ССЫЛКИ.
+[fsharplang-ru]: http://fsharplang.ru
+[fsharplang-ru-logo]: http://fsharplang.ru/img/min_logo.png
+[schvepsss]: https://habrahabr.ru/users/schvepsss/
