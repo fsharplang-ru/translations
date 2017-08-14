@@ -76,7 +76,7 @@ let square x = x * x
 
 let getSquares items =
     items |> List.map square
-	
+
 let lst = [ 1; 2; 3; 4; 5 ] // Создать список в F#
 
 printfn "Квадрат числа %A равен %A" lst (getSquares lst)
@@ -389,7 +389,7 @@ printfn "Строка %s, и что-то обобщенное %A" "hello" [ 1; 2
 
 // все сложные типы имеют встроенный красивый вывод
 printfn "twoTuple=%A,\nPerson=%A,\nTemp=%A,\nEmployee=%A" 
-twoTuple person1 temp worker
+    twoTuple person1 temp worker
 ```
 
 В дополнение, в нашей официальной документации для .NET и поддерживаемых языков есть материал ["Тур по F#"][tour].
