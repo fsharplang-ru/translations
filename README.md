@@ -22,5 +22,5 @@
 
 ## Список переведенных материалов
 
-- [Учебник по FParsec](FParsec/README.md)
+- [Учебник по FParsec(WIP)](FParsec/README.md) см. так же [альтернативный перевод(WIP)](http://dmitriyvlasov.ru/publication/fparsec-tutorial/) в блоге @DmitriyVlasov. Мы работаем над слиянием этих двух текстов.
 - [Начала F# для C# разработчиков](Get%20Started%20with%20F%23%20as%20a%20C%23%20developer/Get%20Started%20with%20F%23%20as%20a%20C%23%20developer.md)
