@@ -1,33 +1,50 @@
-Учебник по FParsec ([оригинал на английском][original])
-==================
++++
+# Authors. Comma separated list, e.g. `["Bob Smith", "David Jones"]`.
+authors = ["Стефан Тольксдорф","Дмитрий Власов"]
 
-Этот учебник познакомит вас с базовыми концепциями [FParsec](https://github.com/stephan-tolksdorf/fparsec).
+# Publication type.
+publication_types = ["7", "3"]
 
-Наша задача - дать вам представление о том, как создавать приложения-парсеры с использованием библиотеки **FParsec**.
-Мы охватим только основные идеи и бегло рассмотрим FParsec API, но надеемся, что этого материала будет достаточно для продолжения изучения FParsec с [руководством пользователя](http://www.quanttec.com/fparsec/users-guide/)[*прим. : на английском*], [справочника по API](http://www.quanttec.com/fparsec/reference/) и примеров использования из папки [Samples](https://github.com/stephan-tolksdorf/fparsec/tree/master/Samples).
+# Publication name and optional abbreviated version.
+date = "2017-01-28"
+title = "Учебник библиотеки FParsec"
+publication = "Перевод учебника библиотеки FParsec"
+abstract = "Этот учебник знакомит вас с основными понятиями библиотеки FParsec. Цель этого учебника это дать вам возможность попробовать создать приложения синтаксического разбора с помощью библиотеки FParsec. Что будет достаточной основой для того, чтобы вы могли в дальнейшем использовать FParsec самостоятельно с помощью руководства пользователя, справочника по API и примеров синтаксических анализаторов."
 
+# Does this page contain LaTeX math? (true/false)
+math = false
 
-Перевод на японский язык от **Gab_km** доступен [тут](blog.livedoor.jp/gab_km/archives/1437534.html)
+# Does this page require source code highlighting? (true/false)
+highlight = true
 
-Оглавление
-----------
+# Is this a selected publication? (true/false)
+selected = true
 
-1. [Подготовка к работе][01-preliminaries]
-2. [Разбор единственного числа с плавающей точкой][02-parsing-a-single-float]
-3. [Разбор числа с пллавающей точкой между скобками][03-parsing-a-float-between-brackets]
-4. [Абстрактные парсеры][04-abstracting-parsers]
-5. Parsing a list of floats _(не переведено)_
-6. Handling whitespace _(не переведено)_
-7. Parsing string data _(не переведено)_
-8. Sequentially applying parsers _(не переведено)_
-9. Parsing alternatives _(не переведено)_
-10. F#’s value restriction _(не переведено)_
-11. Parsing JSON _(не переведено)_
-12. What now? _(не переведено)_
+# Links (optional)
+url_code = "https://github.com/stephan-tolksdorf/fparsec"
+url_dataset = "https://bitbucket.org/fparsec/main/src/c234349e7b738e09a1b9eb53f5f1ef77d584f09b/Samples/?at=default"
+url_source = "http://www.quanttec.com/fparsec/tutorial.html"
++++
 
-[01-preliminaries]: 1.%20Preliminaries.md
-[02-parsing-a-single-float]: 2.%20Parsing%20a%20single%20float.md
-[03-parsing-a-float-between-brackets]: 3.%20Parsing%20a%20float%20between%20brackets.md
-[04-abstracting-parsers]: 4.%20Abstracting%20parsers.md
+# Введение
 
-[original]: http://www.quanttec.com/fparsec/tutorial.html
+Этот учебник знакомит вас с основными понятиями библиотеки FParsec. Наша цель &mdash; дать вам возможность попробовать создать приложения синтаксического разбора с помощью библиотеки FParsec. Мы охватим только основные идеи и дадим беглый обзор библиотеки по [API](https://ru.wikipedia.org/wiki/API)<sup>en</sup>. Но, надеемся, это будет достаточной основой для того, чтобы вы могли в дальнейшем использовать FParsec самостоятельно с помощью: [руководства пользователя](http://www.quanttec.com/fparsec/users-guide/)<sup>en</sup>, [справочника по API](http://www.quanttec.com/fparsec/reference/)<sup>en</sup> и примеров синтаксических анализаторов в папке [Samples](https://bitbucket.org/fparsec/main/src/c234349e7b738e09a1b9eb53f5f1ef77d584f09b/Samples/?at=default)<sup>en</sup>.
+
+# Оглавление
+1. [Вступление](01-preliminaries) 
+1. [Синтаксический анализатор числа с плавающей точкой](02-parsing-a-single-float)
+1. [Синтаксический анализатор числа с плавающей точкой в скобках](03-parsing-a-float-between-brackets)
+1. [Абстрактные синтаксические анализаторы](04-abstracting-parsers)
+1. [Синтаксический анализатор списка чисел с плавающей точкой](05-parsing-a-list-of-floats)
+1. [Обработка пробелов](06-handling-whitespace)
+1. [Синтаксический анализатор строковых данных](07-parsing-string-data)
+1. [Использование последовательности синтаксических анализаторов](08-sequentially-applying-parsers)
+1. [Использование альтернативных синтаксических анализов](09-parsing-alternatives)
+1. [Ограничение значений F#](10-fsharps-value-restriction)
+1. [Синтаксический анализ JSON](11-parsing-json) (В работе)
+1. [Куда дальше?](12-what-now) (В работе)
+
+# Учебник на других языках
+- [Стефан Тольксдорф](https://github.com/stephan-tolksdorf), авторский текст на [английском языке](http://www.quanttec.com/fparsec/tutorial.html).
+* [Gab_km](https://twitter.com/gab_km), перевод на [японский язык](http://blog.livedoor.jp/gab_km/archives/1437534.html).
+  
