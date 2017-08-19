@@ -25,7 +25,7 @@ let result = add (1 2)  // неправильно
     // error FS0003: This value is not a function and cannot be applied
 let result = add 1 2    // правильно
 ```
-_(error FS0003: This value is not a function and cannot be applied)_
+_(Ошибка FS0003: Это значение не является функцией, и применить его невозможно)_
 
 ### Не используйте кортежи, для передачи отдельных параметров ###
 
@@ -34,9 +34,9 @@ _(error FS0003: This value is not a function and cannot be applied)_
 ```fsharp
 addTwoParams (1,2)  // попытка передать в качестве аргумента один кортеж, вместо двух аргументов
    // error FS0001: This expression was expected to have type
-   //
+   // int but here has type 'a * 'b 
 ```
-_(ошибка FS0001: Несоответствие  типов.  Требуется  int, но получен 'a * 'b)_
+_(Ошибка FS0001: Несоответствие  типов.  Требуется  int, но получен 'a * 'b)_
 
 Компилятор рассматривает `(1,2)` как один кортеж, который передаётся в "`addTwoParams`". Затем он жалуется, что первый параметр в `addTwoParams` - это int, а мы пытаемся передать кортеж.
 
@@ -46,7 +46,7 @@ _(ошибка FS0001: Несоответствие  типов.  Требу
 addTuple 1 2   // попытка передать два аргумента, вместо одного кортежа
   // error FS0003: This value is not a function and cannot be applied
 ``` 
-_(error FS0003: This value is not a function and cannot be applied)_
+_(Ошибка FS0003: This value is not a function and cannot be applied)_
   
 ### Остерегайтесь ошибок "слишком мало аргументов" и "слишком много аргументов" (Watch out for too few or too many arguments TODO) ###
 
@@ -63,11 +63,11 @@ Similarly the error for having too many arguments is typically "This value is no
 В тех немногих местах, где F# нуждается в явном символе разделителя, например в списках и записях, используется точка с запятой. Запятые никогда не используются. (Как сломанная запись (broken record TODO), напомню, что запятые используются в кортежах).
 
 ```fsharp
-let list1 = [1,2,3]    // не правильно! В данном случае, список содержит ОДИН элемент 
+let list1 = [1,2,3]    // неправильно! В данном случае, список содержит ОДИН элемент 
                        // кортеж, с тремя параметрами
 let list1 = [1;2;3]    // правильно
 
-type Customer = {Name:string, Address: string}  // не правильно
+type Customer = {Name:string, Address: string}  // неправильно
 type Customer = {Name:string; Address: string}  // правильно
 ```
 
@@ -81,7 +81,8 @@ let z = !y
 // => error FS0001: This expression was expected to have 
 //    type 'a ref but here has type bool    
 ```
-_(error FS0001: This expression was expected to have type 'a ref but here has type bool)_
+_(Ошибка FS0001: В данном выражении требовалось наличие типа 'a ref, но получен тип bool)_
+
 
 В данном случае, правильным является использовать ключевое слово "not". В данном случае, думайте будто пишете на SQL или VB, а не на C.
 
@@ -114,51 +115,56 @@ let add x y =
 {tab}x + y
 // => error FS1161: TABs are not allowed in F# code 
 ```
-_(error FS1161: TABs are not allowed in F# code )_
+_(Ошибка FS1161: В коде F# табуляция может использоваться только при использовании параметра #indent "off")_
 
 Обязательно настройте редактор для замены табов на пробелы. И следите при вставке кода из другого места. Если вы столкнулись с множеством проблем в небольшом куске кода, попробуйте удалить отступы, и снова добавить их.
 
 ### Don't mistake simple values for function values ###
 
-If you are trying to create a function pointer or delegate, watch out that you don't accidentally create a simple value that has already been evaluated.
+Если вы пытаетесь создать указатель на функцию, или делегат (function pointer or delegate TODO), следите за тем, чтобы случайно не создать обычное значение, которое уже вычислено
 
 If you want a parameterless function that you can reuse, you will need to explicitly pass a unit parameter, or define it as a lambda.
+Если вы хотите создать функцию без параметров, которую можно переиспользовать, то вам необходимо явно передать параметр unit, или определить её как лямбда-выражение.
 
 ```fsharp
 let reader = new System.IO.StringReader("hello")
-let nextLineFn   =  reader.ReadLine()  //wrong
-let nextLineFn() =  reader.ReadLine()  //correct
-let nextLineFn   =  fun() -> reader.ReadLine()  //correct
+let nextLineFn   =  reader.ReadLine()  //неправильно
+let nextLineFn() =  reader.ReadLine()  //правильно
+let nextLineFn   =  fun() -> reader.ReadLine()  //правильно
 
 let r = new System.Random()
-let randomFn   =  r.Next()  //wrong
-let randomFn() =  r.Next()  //correct
-let randomFn   =  fun () -> r.Next()  //correct
+let randomFn   =  r.Next()  //неправильно
+let randomFn() =  r.Next()  //правильно
+let randomFn   =  fun () -> r.Next()  //правильно
 ```
 
-See the series ["thinking functionally"](/series/thinking-functionally.html) for more discussion of parameterless functions.
+Чтобы узнать более подробно о функциях без параметров, смотрите серию ["думать функционально"](/series/thinking-functionally.html)
 
-### Tips for troubleshooting "not enough information" errors ###
+### Советы по устранению ошибок "недостаточно информации" ("not enough information" errors) ###
 
-The F# compiler is currently a one-pass left-to-right compiler, and so type information later in the program is unavailable to the compiler if it hasn't been parsed yet. 
+Компилятор F#, в настоящее время, является однопроходным компилятором, слева направо, поэтому информация о типах, объявленных в коде ниже не доступна компилятору, если она ещё не была проанализирована.
 
-A number of errors can be caused by this, such as ["FS0072: Lookup on object of indeterminate type"](#FS0072) and ["FS0041: A unique overload for could not be determined"](#FS0041). The suggested fixes for each of these specific cases are described below, but there are some general principles that can help if the compiler is complaining about missing types or not enough information. These guidelines are:
+Это может вызвать ряд ошибок, таких как ["FS0072: Lookup on object of indeterminate type"](#FS0072) и ["FS0041: A unique overload for could not be determined"](#FS0041).
+_(FS0072: Поиск объекта неопределенного типа)_
+_(FS0041: Невозможно определить уникальную перегрузку)_
 
-* Define things before they are used (this includes making sure the files are compiled in the right order)
-* Put the things that have "known types" earlier than things that have "unknown types". In particular, you might be able reorder pipes and similar chained functions so that the typed objects come first.
-* Annotate as needed. One common trick is to add annotations until everything works, and then take them away one by one until you have the minimum needed. 
+Предлагаемые исправления, для каждого из этих случаев описаны ниже, но есть некоторые общие принципы, которые могут помочь, если компилятор жалуется на недостающие типы, или недостаточное количество информации. Далее приведены следующие указания (TODO последнее предложение, кажется, немного бредовое):
 
-Do try to avoid annotating if possible. Not only is it not aesthetically pleasing, but it makes the code more brittle. It is a lot easier to change types if there are no explicit dependencies on them.
+* Определяйте различные типы, функции, значения перед тем, как их использовать (это так же позволит убедиться, что файлы компилируются в правильном порядке);
+* Помещайте выражения, которые имеют "известные типы" перед теми, которые имеют "неизвестные типы" (In particular, you might be able reorder pipes and similar chained functions so that the typed objects come first. TODO);
+* Аннотируйте по мере необходимости. Один важный "трюк" заключается в том, что сначала добавляются аннотации, пока всё не заработает, а затем постепенно убираются, пока не останется необходимый минимум.
+
+Постарайтесь избегать аннотаций, если это возможно. Это не только не эстетично, но и делает код более "хрупким". Гораздо проще изменять типы, если они не имеют явных зависимостей.
 
 <a id="NumericErrors"></a>
 <div class="page-header">
-	<h1>F# compiler errors</h1>
-	<p class="subtitle">A listing of common errors, ordered by error number</p>
+	<h1>Ошибки компилятора F#</h1>
+	<p class="subtitle">Список наиболее часто встречаемых ошибок, упорядоченный по номеру ошибки</p>
 </div>
 
-Here is a list of the major errors that seem to me worth documenting. I have not documented any errors that are self explanatory, only those that seem obscure to beginners.
+Ниже представлен список основных ошибок, которые мне кажутся необходимыми для документирования. Я специально не документировал ошибки, которые являются очевидными, только те, которые кажутся неясными для новичков.
 
-I will continue to add to the list in the future, and I welcome any suggestions for additions.
+Я буду продолжать добавлять ошибки в дальнейшем, и я приветствую любые предложения о дополнениях.
 
 * [FS0001: The type 'X' does not match the type 'Y'](#FS0001)
 * [FS0003: This value is not a function and cannot be applied](#FS0003)
@@ -177,137 +183,197 @@ I will continue to add to the list in the future, and I welcome any suggestions 
 	
 <a id="FS0001"></a>
 ## FS0001: The type 'X' does not match the type 'Y' ##
+### _(FS0001: В данном выражении требовалось наличие типа 'X', но получен тип 'Y')_ ###
 
-This is probably the most common error you will run into. It can manifest itself in a wide variety of contexts, so I have grouped the most common problems together with examples and fixes. Do pay attention to the error message, as it is normally quite explicit about what the problem is.
+Вероятно, это самая распространённая ошибка, с которой вы столкнётесь. Данная ошибка может появляться в самых разных контекстах, поэтому я сгруппировал наиболее распространённые случаи с примерами и исправлениями. Обращайте внимание на сообщение об ошибке, так как обычно оно даёт понять, в чём заключается проблема.
 
 <table class="table table-striped table-bordered table-condensed">
 <thead>
   <tr>
-	<th>Error message</th>
-	<th>Possible causes</th>
+	<th>Сообщение об ошибке</th>
+	<th>Возможные причины</th>
   </tr>
 </thead>
 <tbody>
   <tr>
-	<td>The type 'float' does not match the type 'int'</td>
-	<td><a href="#FS0001A">A. Can't mix floats and ints</a></td>
+	<td>
+        The type 'float' does not match the type 'int'
+        <br/>
+        <em>(Тип 'float' не совпадает с типом 'int')</em>
+    </td>
+	<td><a href="#FS0001A">A. Нельзя смешивать float и int</a></td>
   </tr>
   <tr>
-	<td>The type 'int' does not support any operators named 'DivideByInt'</td>
-	<td><a href="#FS0001A">A. Can't mix floats and ints.</a></td>
+	<td>
+    The type 'int' does not support any operators named 'DivideByInt'
+    <br/>
+    <em>(Тип 'int' не поддерживает оператор 'DivideByInt')</em>
+    </td>
+	<td><a href="#FS0001A">A. Нельзя смешивать float и int.</a></td>
   </tr>
   <tr>
-	<td>The type 'X' is not compatible with any of the types</td>
-	<td><a href="#FS0001B">B. Using the wrong numeric type.</a></td>
+	<td>
+        The type 'X' is not compatible with any of the types
+        <br/>
+        <em>(Тип 'X' несовместим с любыми типами)</em>
+    </td>
+	<td><a href="#FS0001B">B. Использование неправильного числового типа.</a></td>
   </tr>
   <tr>
-	<td>This type (function type) does not match the type (simple type). Note: function types have a arrow in them, like <code>'a -> 'b</code>.</td>
-	<td><a href="#FS0001C">C. Passing too many arguments to a function.</a></td>
+	<td>
+        This type (function type) does not match the type (simple type).
+        <br/>
+        <em>(Тип (тип функции) не совпадает с типом (обычный тип))</em>
+        <br/>
+        Примечание: типы функций имеют стрелку в них, например <code>'a -> 'b</code>.
+    </td>
+	<td><a href="#FS0001C">C. Передаётся слишком много аргументов в функцию.</a></td>
   </tr>
   <tr>
-	<td>This expression was expected to have (function type) but here has (simple type)</td>
-	<td><a href="#FS0001C">C. Passing too many arguments to a function.</a></td>
+	<td>
+        This expression was expected to have (function type) but here has (simple type)
+        <br/>
+        <em>(Несоответствие типов. Требуется (тип функции), но получен (обычный тип))</em>
+    </td>
+	<td><a href="#FS0001C">C. Передаётся слишком много аргументов в функцию.</a></td>
   </tr>
   <tr>
-	<td>This expression was expected to have (N part function) but here has (N-1 part function)</td>
-	<td><a href="#FS0001C">C. Passing too many arguments to a function.</a></td>
+	<td>
+        This expression was expected to have (N part function) but here has (N-1 part function)
+        <br/>
+        <em>(В данном выражении требовалось наличие типа (N part function TODO), но получен тип (N-1 part function TODO))</em>
+    </td>
+	<td><a href="#FS0001C">C. Передаётся слишком много аргументов в функцию.</a></td>
   </tr>
   <tr>
-	<td>This expression was expected to have (simple type) but here has (function type)</td>
-	<td><a href="#FS0001D">D. Passing too few arguments to a function.</a></td>
+	<td>
+        This expression was expected to have (simple type) but here has (function type)
+        <br/>
+        <em>(Несоответствие типов. Требуется (обычный тип), но получен (тип функции))</em>
+    </td>
+	<td><a href="#FS0001D">D. Передаётся недостаточно аргументов в функцию.</a></td>
   </tr>
   <tr>
-	<td>This expression was expected to have (type) but here has (other type)</td>
-	<td><a href="#FS0001E">E. Straightforward type mismatch.</a><br>
-	<a href="#FS0001F">F. Inconsistent returns in branches or matches.</a><br>
-	<a href="#FS0001G">G. Watch out for type inference effects buried in a function.</a><br>
+	<td>
+        This expression was expected to have (type) but here has (other type)
+        <br/>
+        <em>(Несоответствие типов. Требуется (тип 'X'), но получен (другой тип))</em>
+    </td>
+	<td><a href="#FS0001E">E. Прямое несоответствие типа.</a><br>
+	<a href="#FS0001F">F. Inconsistent returns in branches or matches. (TODO)</a><br>
+	<a href="#FS0001G">G. Watch out for type inference effects buried in a function. (TODO)</a><br>
 	</td>
   </tr>
   <tr>
-	<td>Type mismatch. Expecting a (simple type) but given a (tuple type). Note: tuple types have a star in them, like <code>'a * 'b</code>.</td>
-	<td><a href="#FS0001H">H. Have you used a comma instead of space or semicolon?</a></td>
+	<td>
+        Type mismatch. Expecting a (simple type) but given a (tuple type).
+        <br/>
+        <em>(Несоответствие типов. Требуется (обычный тип), но получен (кортежный тип))</em>
+        Примечание: типы кортежей имеют звёздочку в названии, например <code>'a * 'b</code>.
+    </td>
+	<td><a href="#FS0001H">H. Вы использовали запятую, вместо пробела или точки с запятой?</a></td>
   </tr>
   <tr>
-	<td>Type mismatch. Expecting a (tuple type) but given a (different tuple type). </td>
-	<td><a href="#FS0001I">I. Tuples must be the same type to be compared.</a></td>
+	<td>
+        Type mismatch. Expecting a (tuple type) but given a (different tuple type).
+        <br/>
+        <em>(Несоответствие типов. Требуется (кортежный тип), но получен (другой кортежный тип))</em>
+    </td>
+	<td><a href="#FS0001I">I. Кортежи должны быть одного и того же типа.</a></td>
   </tr>
   <tr>
-	<td>This expression was expected to have type 'a ref but here has type X</td>
-	<td><a href="#FS0001J">J. Don't use ! as the "not" operator.</a></td>
+	<td>
+        This expression was expected to have type 'a ref but here has type X
+        <br/>
+        <em>(В данном выражении требовалось наличие типа 'a ref, но получен тип X)</em>
+    </td>
+	<td><a href="#FS0001J">J. Не используйте оператор "!", как оператор "не".</a></td>
   </tr>
   <tr>
-	<td>The type (type) does not match the type (other type)</td>
-	<td><a href="#FS0001K">K. Operator precedence (especially functions and pipes).</a></td>
+	<td>
+        The type (type) does not match the type (other type)
+        <br/>
+        <em>(Тип (тип) не совпадает с типом (другой тип))</em>
+    </td>
+	<td><a href="#FS0001K">K. Приоритет операторов (особенно функции и конвейеры).</a></td>
   </tr>
   <tr>
-	<td>This expression was expected to have type (monadic type) but here has type 'b * 'c</td>
-	<td><a href="#FS0001L">L. let! error in computation expressions.</a></td>
+	<td>
+        This expression was expected to have type (monadic type) but here has type 'b * 'c
+        <br/>
+        <em>(В данном выражении требовалось наличие типа (монадический тип), но получен тип 'b * 'c)</em>
+    </td>
+	<td><a href="#FS0001L">L. let! ошибка в вычислимых выражениях (computation expressions).</a></td>
   </tr>
 </tbody>
 </table>
 
 <a id="FS0001A"></a>
-### A. Can't mix ints and floats ###
+### A. Нельзя смешивать float и int ###
 
-Unlike C# and most imperative languages, ints and floats cannot be mixed in expressions. You will get a type error if you attempt this:
+В отличие от C# и многих других императивных языков, в F# нельзя смешивать типы int и float в выражениях. Вы получите ошибку, если попытаетесь это сделать:
 
 ```fsharp
-1 + 2.0  //wrong
+1 + 2.0  //неправильно
    // => error FS0001: The type 'float' does not match the type 'int'
 ```
-   
-The fix is to cast the int into a `float` first:
+_(Ошибка FS0001: Тип 'float' не совпадает с типом 'int')_
+
+Исправление состоит в том, чтобы сначала преобразовать тип int в `float`:
 
 ```fsharp
-float 1 + 2.0  //correct
+float 1 + 2.0  //правильно
 ```
 
-This issue can also manifest itself in library functions and other places. For example, you cannot do "`average`" on a list of ints.
+Эта проблема также может проявляться в библиотечных функциях и в других местах. Например, вы не можете применить функцию "`average`" к списку int.
 
 ```fsharp
-[1..10] |> List.average   // wrong
+[1..10] |> List.average   // неправильно
    // => error FS0001: The type 'int' does not support any 
    //    operators named 'DivideByInt'
 ```
+_(Ошибка FS0001: Тип 'int' не поддерживает оператор 'DivideByInt')_
    
-You must cast each int to a float first, as shown below:
+Вам необходимо сперва преобразовать int в float, как показано ниже:
 
 ```fsharp
-[1..10] |> List.map float |> List.average  //correct 
-[1..10] |> List.averageBy float  //correct (uses averageBy)
+[1..10] |> List.map float |> List.average  //правильно
+[1..10] |> List.averageBy float  //правильно (использует averageBy)
 ```
 
 <a id="FS0001B"></a>
-### B. Using the wrong numeric type ###
+### B. Использование неправильного числового типа ###
 
-You will get a "not compatible" error when a numeric cast failed.
+Вы получите ошибка "не совместимо", если числовое приведение не выполнено
 
 ```fsharp
-printfn "hello %i" 1.0  // should be a int not a float
+printfn "hello %i" 1.0  // должно иметь тип int, а не float
   // error FS0001: The type 'float' is not compatible 
   //               with any of the types byte,int16,int32...
 ```
+_(Ошибка FS0001: Тип 'float' не совместим с любыми типами byte,int16,int32..)_
 
-One possible fix is to cast it if appropriate.
+Одним из возможных решений заключается в приведении типа float к типу int:
 
 ```fsharp
 printfn "hello %i" (int 1.0)
 ```
 
 <a id="FS0001C"></a>
-### C. Passing too many arguments to a function ###
+### C. Передаётся слишком много аргументов в функцию ###
 
 ```fsharp
 let add x y = x + y
 let result = add 1 2 3
 // ==> error FS0001: The type ''a -> 'b' does not match the type 'int'
 ```
+_(Ошибка FS0001: Тип ''a -> 'b' не совпадает с типом 'int')_
 
-The clue is in the error. 
+Подсказка находится в ошибке. 
 
-The fix is to remove one of the arguments!
+Исправление состоит в удалении одиного из аргументов!
 
-Similar errors are caused by passing too many arguments to `printf`.
+Подобные ошибки вызваны передачей слишком большого количества аргументов в функцию `printf`.
 
 ```fsharp
 printfn "hello" 42
@@ -322,32 +388,36 @@ printfn "hello %i %i" 42 43 44
 // ==> Error FS0001: Type mismatch. Expecting a  'a -> 'b -> 'c -> 'd    
 //                   but given a 'a -> 'b -> unit   
 ```
+_(Ошибка FS0001: В данном выражении требовалось наличие типа' a -> 'b, но получен тип unit )_
+_(Ошибка FS0001: Несоответствие типов. Требуется 'a -> 'b -> 'c, но получен 'a -> unit)_
+_(Ошибка FS0001: Несоответствие типов. Требуется 'a -> 'b -> 'c -> 'd, но получен 'a -> 'b -> unit)_
 
 <a id="FS0001D"></a>
-### D. Passing too few arguments to a function ###
+### D. Передаётся недостаточно аргументов в функцию ###
 
-If you do not pass enough arguments to a function, you will get a partial application. When you later use it, you get an error because it is not a simple type.
+Если вы передадите не достаточно аргументов функции, вы получите частичное применение. Когда вы позже попытаетесь вызвать функцию, вы получите сообщение об ошибке, потому что это не обычный тип.
 
 ```fsharp
 let reader = new System.IO.StringReader("hello");
 
-let line = reader.ReadLine        //wrong but compiler doesn't complain
-printfn "The line is %s" line     //compiler error here!
+let line = reader.ReadLine        //неправильно, но компилятор не жалуется
+printfn "The line is %s" line     //ошибка компиляции здесь!
 // ==> error FS0001: This expression was expected to have type string    
-//                   but here has type unit -> string    
+//                   but here has type unit -> string
 ```
+_(Ошибка FS0001: В данном выражении требовалось наличие типа string, но получен тип unit -> string)_
 
-This is particularly common for some .NET library functions that expect a unit parameter, such as `ReadLine` above.
+Это особенно характерно для некоторых функций .NET библиотек, которые ожидают параметр типа unit, например как `ReadLine` выше.
 
-The fix is to pass the correct number of parameters. Check the type of the result value to make sure that it is indeed a simple type.  In the `ReadLine` case, the fix is to pass a `()` argument.
+Чтобы исправить данную ошибку, необходимо передать правильное количество параметров. Проверьте тип возвращаемого значения, чтобы убедиться, что это действительно простой тип. В случае с `ReadLine`, достаточно передать аргумент `()`.
 
 ```fsharp
-let line = reader.ReadLine()      //correct
-printfn "The line is %s" line     //no compiler error 
+let line = reader.ReadLine()      //правильно
+printfn "The line is %s" line     //нет ошибки компиляции
 ```
 
 <a id="FS0001E"></a>
-### E. Straightforward type mismatch ###
+### E. Прямое несоответствие типа ###
 
 The simplest case is that you have the wrong type, or you are using the wrong type in a print format string.
 
@@ -358,7 +428,7 @@ printfn "hello %s" 1.0
 ```
 
 <a id="FS0001F"></a>
-### F. Inconsistent return types in branches or matches ###
+### F. Inconsistent return types in branches or matches (TODO) ###
 
 A common mistake is that if you have a branch or match expression, then every branch MUST return the same type.  If not, you will get a type error.
 
@@ -411,7 +481,7 @@ let f x =
 ```
 
 <a id="FS0001G"></a>  
-### G. Watch out for type inference effects buried in a function ###
+### G. Watch out for type inference effects buried in a function (TODO) ###
 
 A function may cause an unexpected type inference that ripples around your code. For example, in the following, the innocent print format string accidentally causes `doSomething` to expect a string.
 
@@ -429,7 +499,7 @@ doSomething 1
 The fix is to check the function signatures and drill down until you find the guilty party.  Also, use the most generic types possible, and avoid type annotations if possible.
 
 <a id="FS0001H"></a>  
-### H. Have you used a comma instead of space or semicolon? ###
+### H. Вы использовали запятую, вместо пробела или точки с запятой? ###
 
 If you are new to F#, you might accidentally use a comma instead of spaces to separate function arguments:
 
@@ -460,7 +530,7 @@ System.String.Compare "a" "b"
 
   
 <a id="FS0001I"></a>  
-### I. Tuples must be the same type to be compared or pattern matched ###
+### I. Кортежи должны быть одного и того же типа ###
 
 Tuples with different types cannot be compared. Trying to compare a tuple of type `int * int`, with a tuple of type `int * string` results in an error:
 
@@ -503,7 +573,7 @@ let result = f z
 
 
 <a id="FS0001J"></a>  
-### J. Don't use ! as the "not" operator ###
+### J. Не используйте оператор "!", как оператор "не" ###
 
 If you use `!` as a "not" operator, you will get a type error mentioning the word "ref".
 
@@ -523,7 +593,7 @@ let z = not y   //correct
 
 
 <a id="FS0001K"></a>  
-### K. Operator precedence (especially functions and pipes) ###
+### K. Приоритет операторов (особенно функции и конвейеры) ###
 
 If you mix up operator precedence, you may get type errors.  Generally, function application is highest precedence compared to other operators, so you get an error in the case below:
 
@@ -559,7 +629,7 @@ let result = 42 + ([1..10] |> List.sum)
 
 
 <a id="FS0001L"></a>  
-### L. let! error in computation expressions (monads) ###
+### L. let! ошибка в вычислимых выражениях (computation expressions) ###
 
 Here is a simple computation expression:
 
