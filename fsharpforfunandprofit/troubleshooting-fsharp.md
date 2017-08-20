@@ -9,7 +9,7 @@
 
 ## Общие рекомендации по устранению ошибок ##
 
-Безусловно, самое важное, что вы можете сделать - это потратить время и силы, чтобы точно понять, как работает F#, особенно базовые понятия, связанные с функциями и системой типов. Поэтому, пожалуйста, прочитайте и перечитайте серию ["мыслить функционально"] (http://fsharpforfunandprofit.com/series/thinking-functionally.html) и ["понимание типов F#"](http://fsharpforfunandprofit.com/series/understanding-fsharp-types.html), поэкспериментируйте с примерами, проникнитесь идеями данного языка перед тем, как попробовать писать настоящий код. Если вы не понимаете, как работают функции и типы, то и ошибки компилятора для вас не будут иметь никакого смысла.
+Безусловно, самое важное, что вы можете сделать - это потратить время и силы, чтобы точно понять, как работает F#, особенно базовые понятия, связанные с функциями и системой типов. Поэтому, пожалуйста, прочитайте и перечитайте серию ["мыслить функционально"](http://fsharpforfunandprofit.com/series/thinking-functionally.html) и ["понимание типов F#"](http://fsharpforfunandprofit.com/series/understanding-fsharp-types.html), поэкспериментируйте с примерами, проникнитесь идеями данного языка перед тем, как попробовать писать настоящий код. Если вы не понимаете, как работают функции и типы, то и ошибки компилятора для вас не будут иметь никакого смысла.
 
 Если вы пришли из императивного языка, такого как C# то возможно, имеете некоторые вредные привычки, например, полагатетесь на отладчик, чтобы найти и исправить неверный код. В F# у вас не получится забраться так далеко, поскольку компилятор довольно строг во многих случаях. И конечно же нет инструмента для пошаговой “отладки” компилятора (And of course, there is no tool to “debug” the compiler and step through its processing). Лучший инструмент для отладки ошибок компилятора - это ваш мозг, и F# заставляет вас использовать его!
 
@@ -145,7 +145,9 @@ let randomFn   =  fun () -> r.Next()  //правильно
 Компилятор F#, в настоящее время, является однопроходным компилятором, слева направо, поэтому информация о типах, объявленных в коде ниже не доступна компилятору, если она ещё не была проанализирована.
 
 Это может вызвать ряд ошибок, таких как ["FS0072: Lookup on object of indeterminate type"](#FS0072) и ["FS0041: A unique overload for could not be determined"](#FS0041).
+
 _(FS0072: Поиск объекта неопределенного типа)_
+
 _(FS0041: Невозможно определить уникальную перегрузку)_
 
 Предлагаемые исправления, для каждого из этих случаев описаны ниже, но есть некоторые общие принципы, которые могут помочь, если компилятор жалуется на недостающие типы, или недостаточное количество информации. Далее приведены следующие указания (TODO последнее предложение, кажется, немного бредовое):
@@ -419,18 +421,19 @@ printfn "The line is %s" line     //нет ошибки компиляции
 <a id="FS0001E"></a>
 ### E. Прямое несоответствие типа ###
 
-The simplest case is that you have the wrong type, or you are using the wrong type in a print format string.
+Самый простой случай возникновения данной ошибки заключается в том, что вы указали неправильный тип в строке print.
 
 ```fsharp
 printfn "hello %s" 1.0
 // => error FS0001: This expression was expected to have type string    
 //                  but here has type float    
 ```
+_(Ошибка FS0001: В данном выражении требовалось наличие типа string, но получен тип float)_
 
 <a id="FS0001F"></a>
 ### F. Inconsistent return types in branches or matches (TODO) ###
 
-A common mistake is that if you have a branch or match expression, then every branch MUST return the same type.  If not, you will get a type error.
+Данная ошибка очень часто возникает в выражениях `if` или `match`. В подобных выражениях, каждая "ветвь" ДОЛЖНА возвращать значения одного, и того же типа, если это не так, то вы получите ошибку типа.
 
 ```fsharp
 let f x = 
@@ -439,6 +442,7 @@ let f x =
 // => error FS0001: This expression was expected to have type string    
 //                  but here has type int
 ```
+_(Ошибка FS0001: В этом выражении ожидалось использование типа string, но используется тип int)_
 
 ```fsharp
 let g x = 
@@ -448,8 +452,9 @@ let g x =
 // error FS0001: This expression was expected to have type
 //               string but here has type int
 ```
+_(Ошибка FS0001: В этом выражении ожидалось использование типа string, но используется тип int)_
 
-Obviously, the straightforward fix is to make each branch return the same type. 
+Очевидно, что для исправления данной ошибки необходимо, чтобы каждая ветвь выражения возвращала один и тот же тип.
 
 ```fsharp
 let f x = 
@@ -461,8 +466,7 @@ let g x =
   | 1 -> "hello"
   | _ -> "42"
 ```
-
-Remember that if an "else" branch is missing, it is assumed to return unit, so the "true" branch must also return unit.
+Запомните, что в случае когда ветвь "else" отсутствует, возвращаемым типом должен быть тип unit.
 
 ```fsharp
 let f x = 
@@ -470,11 +474,12 @@ let f x =
 // error FS0001: This expression was expected to have type
 //               unit but here has type string    
 ```
+_(Ошибка FS0001: В этом выражении ожидалось использование типа unit, но используется тип string)_
 
-If both branches cannot return the same type, you may need to create a new union type that can contain both types.
+Если в вашем случае обе ветви не могут возвращать один и тот же тип, то вам необходимо создать union тип, который будет содержать оба значения.
 
 ```fsharp
-type StringOrInt = | S of string | I of int  // new union type
+type StringOrInt = | S of string | I of int  // новый union тип
 let f x = 
   if x > 1 then S "hello"
   else I 42
@@ -483,48 +488,50 @@ let f x =
 <a id="FS0001G"></a>  
 ### G. Watch out for type inference effects buried in a function (TODO) ###
 
-A function may cause an unexpected type inference that ripples around your code. For example, in the following, the innocent print format string accidentally causes `doSomething` to expect a string.
+A function may cause an unexpected type inference that ripples around your code. For example, in the following, the innocent print format string accidentally causes `doSomething` to expect a string. (TODO)
 
 ```fsharp
 let doSomething x = 
-   // do something
+   // сделать что-то
    printfn "x is %s" x
-   // do something more
+   // сделать что-то ещё
 
 doSomething 1
 // => error FS0001: This expression was expected to have type string    
 //    but here has type int    
 ```
+_(Ошибка FS0001: В этом выражении ожидалось использование типа string, но используется тип int)_
 
-The fix is to check the function signatures and drill down until you find the guilty party.  Also, use the most generic types possible, and avoid type annotations if possible.
+The fix is to check the function signatures and drill down until you find the guilty party.  Also, use the most generic types possible, and avoid type annotations if possible. (TODO)
 
 <a id="FS0001H"></a>  
 ### H. Вы использовали запятую, вместо пробела или точки с запятой? ###
 
-If you are new to F#, you might accidentally use a comma instead of spaces to separate function arguments:
+Если вы являетесь новичком в F#, вы можете по привычке использовать запятую, вместо пробелов, для разделения аргументов функции:
 
 ```fsharp
-// define a two parameter function
+// определим функцию с двумя параметрами
 let add x y = x + 1
 
 add(x,y)   // FS0001: This expression was expected to have 
            // type int but here has type  'a * 'b   
 ```
+_(Ошибка FS0001: В этом выражении ожидалось использование типа int, но используется тип 'a * 'b)_
 
-The fix is: don't use a comma!
+Исправление: не использовать запятую!
 
 ```fsharp
-add x y    // OK
+add x y    // Правильно
 ```
 
-One area where commas *are* used is when calling .NET library functions. 
-These all take tuples as arguments, so the comma form is correct. In fact, these calls look just the same as they would from C#:  
+Обычно запятые *используются* в вызовах функций из стандартной библиотеки .NET.
+Все эти функции принимают кортежи в качестве аргументов, поэтому использование запятой в данном случае является правильным. Фактически, эти вызовы выглядят так же, как и в C#:
 
 ```fsharp
-// correct
+// Правильно
 System.String.Compare("a","b")
 
-// incorrect
+// Неправильно
 System.String.Compare "a" "b"
 ```
 
@@ -532,29 +539,31 @@ System.String.Compare "a" "b"
 <a id="FS0001I"></a>  
 ### I. Кортежи должны быть одного и того же типа ###
 
-Tuples with different types cannot be compared. Trying to compare a tuple of type `int * int`, with a tuple of type `int * string` results in an error:
+Кортежи с разными типами нельзя сравнивать. Попытка сравнения кортежа типа `int * int`, с кортежем типа `int * string` приведёт к ошибке:
 
 ```fsharp
 let  t1 = (0, 1)
-let  t2 = (0, "hello")
+let  t2 = (0, "привет")
 t1 = t2
 // => error FS0001: Type mismatch. Expecting a int * int    
 //    but given a int * string    
 //    The type 'int' does not match the type 'string'
 ```
+_(Ошибка FS0001: Несоответствие типов. Требуется int * int, но получен int * string. Тип 'int' не совпадает с типом 'string')_
 
-And the length must be the same:
+И количество элементов в сравниваемых кортежах должно быть одинаковым:
 
 ```fsharp
 let  t1 = (0, 1)
-let  t2 = (0, 1, "hello")
+let  t2 = (0, 1, "привет")
 t1 = t2
 // => error FS0001: Type mismatch. Expecting a int * int    
 //    but given a int * int * string    
 //    The tuples have differing lengths of 2 and 3
 ```
+_(Ошибка FS0001: Несоответствие типов. Требуется int * int, но получен int * int * string. Кортежи имеют различающиеся длины 2 и 3)_
 
-You can get the same issue when pattern matching tuples during binding:
+Вы так же можете получить похожую ошибку сопоставления с образцом при декомпозиции кортежей:
 
 ```fsharp
 let x,y = 1,2,3
@@ -569,46 +578,49 @@ let result = f z
 //                  but given a int * string    
 //                  The type 'int' does not match the type 'string'
 ```
-
+_(Ошибка FS0001: Несоответствие типов. Требуется 'a * 'b , но получен 'a * 'b * 'c. Кортежи имеют различающиеся длины 2 и 3)_
+_(Ошибка FS0001: Несоответствие типов. Требуется int * int, но получен int * string. Тип 'int' не совпадает с типом 'string')_
 
 
 <a id="FS0001J"></a>  
 ### J. Не используйте оператор "!", как оператор "не" ###
 
-If you use `!` as a "not" operator, you will get a type error mentioning the word "ref".
+Если вы попробуете использовать `!` как оператор "not", вы получите ошибку типа с упоминанием слова "ref".
 
 ```fsharp
 let y = true
-let z = !y     //wrong
+let z = !y     //неправильно
 // => error FS0001: This expression was expected to have 
 //    type 'a ref but here has type bool    
 ```
+_(Ошибка FS0001: В этом выражении ожидалось использование типа 'a ref, но используется тип bool)_
 
-The fix is to use the "not" keyword instead.
+Чтобы исправить данную ошибку, используйте ключевое слово "not".
 
 ```fsharp
 let y = true
-let z = not y   //correct
+let z = not y   //правильно
 ```
 
 
 <a id="FS0001K"></a>  
 ### K. Приоритет операторов (особенно функции и конвейеры) ###
 
-If you mix up operator precedence, you may get type errors.  Generally, function application is highest precedence compared to other operators, so you get an error in the case below:
+Если вы смешаете приоритет операторов, то получите ошибки типа. Как правило, применение функции имеет более высокий приоритет, чем другие операторы, поэтому вы получите ошибку в приведённом ниже примере:
 
 ```fsharp
 String.length "hello" + "world"
    // => error FS0001:  The type 'string' does not match the type 'int'
 
-// what is really happening
+// что действительно происходит
 (String.length "hello") + "world"  
 ```
+_(Ошибка FS0001: Тип 'string' не совпадает с типом 'int')_
 
-The fix is to use parentheses.
+Для исправления, используйте круглые скобки.
 
 ```fsharp
-String.length ("hello" + "world")  // corrected
+String.length ("hello" + "world")  // исправлено
 ```
 
 Conversely, the pipe operator is low precedence compared to other operators.
@@ -617,9 +629,10 @@ Conversely, the pipe operator is low precedence compared to other operators.
 let result = 42 + [1..10] |> List.sum
  // => => error FS0001:  The type ''a list' does not match the type 'int'
 
-// what is really happening
+// что действительно происходит
 let result = (42 + [1..10]) |> List.sum  
 ```
+_(Ошибка FS0001: )_
 
 Again, the fix is to use parentheses.
 
@@ -659,6 +672,7 @@ wrap {
 // error FS0001: This expression was expected to have type Wrapper<'a>
 //               but here has type 'b * 'c    
 ```
+_(Ошибка FS0001: )_
 
 The reason is that "`Bind`" expects a tuple `(wrapper,func)`, not two parameters.  (Check the signature for bind in the F# documentation).
 
@@ -681,6 +695,7 @@ let add1 x = x + 1
 let x = add1 2 3
 // ==>   error FS0003: This value is not a function and cannot be applied
 ```
+_(Ошибка FS0003: )_
 
 It can also occur when you do operator overloading, but the operators cannot be used as prefix or infix.
 
@@ -705,6 +720,7 @@ let detectType v =
 // involves an indeterminate type based on information prior to this program point. 
 // Runtime type tests are not allowed on some types. Further type annotations are needed.
 ```
+_(Ошибка FS0008: )_
 
 The message tells you the problem: "runtime type tests are not allowed on some types".  
 
@@ -733,6 +749,7 @@ let f =
    x+1        // oops! don't start at column 4
               // error FS0010: Unexpected identifier in binding
 ```
+_(Ошибка FS0010: )_
          
 The fix is to align the code correctly!
 
@@ -762,6 +779,7 @@ let (|+) a = -a
 
 (|+) 1  // with parentheses -- OK!
 ```
+_(Ошибка FS0010: )_
 
 Can also occur if you are missing one side of an infix operator:
 
@@ -769,6 +787,7 @@ Can also occur if you are missing one side of an infix operator:
 || true  // error FS0010: Unexpected symbol '||'
 false || true  // OK
 ```
+_(Ошибка FS0010: )_
 
 Can also occur if you attempt to send a namespace definition to F# interactive. The interactive console does not allow namespaces.
 
@@ -778,6 +797,7 @@ namespace Customer  // FS0010: Incomplete structured construct
 // declare a type
 type Person= {First:string; Last:string}
 ```
+_(Ошибка FS0010: )_
 
 <a id="FS0013"></a>
 ## FS0013: The static coercion from type X to Y involves an indeterminate type ##
@@ -801,6 +821,7 @@ let something =
   2+2               // => FS0020: This expression should have type 'unit'
   "hello"
 ```
+_(Ошибка FS0020: )_
 
 The easy fix is use `ignore`.  But ask yourself why you are using a function and then throwing away the answer -- it might be a bug.
 
