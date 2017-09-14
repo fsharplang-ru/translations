@@ -1,32 +1,10 @@
-+++
-weight = 5
+# Разбор списка чисел с плавающей точкой
 
-# Publication type.
-publication_types = ["7"]
+Мы уже в течение трех глав обсуждаем как сделать синтаксический разбор одного числа с плавающей запятой, так что пришло время попробовать что-то более амбициозное: синтаксический разбор списка чисел с плавающей точкой.
 
-# Publication name and optional abbreviated version.
-date = "2017-01-28"
-title = "Глава 5. Синтаксический анализатор списка чисел с плавающей точкой"
-publication = "Учебник библиотеки FParsec"
+Давайте вначале предположим, что нам нужно, делать синтаксический разбор последовательности чисел с плавающей точкой в скобках, т.е. текст в формате [расширенной формы Бэкуса-Наура](https://ru.wikipedia.org/wiki/Расширенная_форма_Бэкуса_—_Наура) (далее РБНФ): `("[" float "]")*`. Допустимыми входными строками в этом формате будут, например, такие: `""`, `"[1.0]"`, `"[2][3][4]"`.
 
-# Does this page contain LaTeX math? (true/false)
-math = false
-
-# Does this page require source code highlighting? (true/false)
-highlight = true
-
-# Is this a selected publication? (true/false)
-selected = false
-
-# Links (optional)
-url_source = "http://www.quanttec.com/fparsec/tutorial.html#parsing-a-list-of-floats"
-+++
-
-Мы уже течение трех глав обсуждаем как делать синтаксический разбор одного числа с плавающей запятой, поэтому в этот раз мы попытаемся нечто более амбициозное: синтаксический разбор списка чисел с плавающей точкой.
-
-Предположим сначала, что нам нужно, чтобы делать синтаксический разбор последовательности чисел с плавающей точкой в скобках, т.е. текст в формате [расширенной формы Бэкуса-Наура](https://ru.wikipedia.org/wiki/Расширенная_форма_Бэкуса_—_Наура) (далее РБНФ): `("[" float "]")*`. Допустимые входные строки в этом формате, например: `""`, `"[1.0]"`, `"[2][3][4]"`.
-
-Поскольку у нас уже есть синтаксический анализатор для числа с плавающей точкой в скобках, нам нужен только способ неоднократно применять этот синтаксический анализатор для разбора последовательности. Именно это этого предназначен комбинатор [`many`](http://www.quanttec.com/fparsec/reference/primitives.html#members.many):
+Поскольку у нас уже есть синтаксический анализатор для числа с плавающей точкой в скобках, нам нужен только способ многократно применять этот синтаксический анализатор для разбора последовательности. Именно для этого предназначен комбинатор [`many`](http://www.quanttec.com/fparsec/reference/primitives.html#members.many):
 ```fsharp
 val many: Parser<'a,'u> -> Parser<'a list,'u>
 ```
@@ -56,7 +34,7 @@ Failure: Error in Ln: 1 Col: 9
 Expecting: decimal digit
 ```
 
-Обратите внимание, что `many` также успешно исполняется для пустой последовательности. Если вы хотите, чтобы требовался, по крайней мере, один элемент во входной последовательности, вы сможете использовать вместо этого [`many1`](http://www.quanttec.com/fparsec/reference/primitives.html#members.many1):
+Обратите внимание, что `many` также успешно исполняется для пустой последовательности. Если вы хотите потребовать наличие хотя-бы одного элемента, вы можете использовать для этого [`many1`](http://www.quanttec.com/fparsec/reference/primitives.html#members.many1):
 ```fsharp
 > test (many1 floatBetweenBrackets) "(1)";;
 Failure: Error in Ln: 1 Col: 1
@@ -65,21 +43,21 @@ Failure: Error in Ln: 1 Col: 1
 Expecting: '['
 ```
 
-{{% alert note %}}
+**_Примечание_**
+> Если вы предпочитаете, чтобы последнее сообщение об ошибке было сформулировано в терминах высокоуровневого синтаксического анализатора `floatBetweenBrackets` вместо низкоуровневого синтаксического анализатора `str "["`, вы можете использовать оператор `<?>`, как в следующем примере:
+>```fsharp
+>> test (many1 (floatBetweenBrackets <?> "float between brackets")) "(1)";;
+>Failure: Error in Ln: 1 Col: 1
+>(1)
+>^
+>Expecting: float between brackets
+>```
+> Пожалуйста, загляните в [главу 5.8](http://www.quanttec.com/fparsec/users-guide/customizing-error-messages.html) руководства пользователя, чтобы узнать больше о настройке сообщений об ошибках.
 
-Если вы предпочитаете, чтобы последнее сообщение об ошибке было сформулировано в терминах более высокого уровневого синтаксического анализатора `floatBetweenBrackets` вместо низкоуровневого синтаксического анализатора `str "["`, вы можете использовать оператор `<?>`, как в следующем примере:
-```fsharp
-> test (many1 (floatBetweenBrackets <?> "float between brackets")) "(1)";;
-Failure: Error in Ln: 1 Col: 1
-(1)
-^
-Expecting: float between brackets
-```
+Если вам не нужен результат работы синтаксического анализатора и просто хотите пропустить полученный список,
+Если вы хотите пропустить последовательность не получая список результатов, то вы можете использовать оптимизированные комбинаторы [`skipMany`](http://www.quanttec.com/fparsec/reference/primitives.html#members.skipMany) и [`skipMany1`](http://www.quanttec.com/fparsec/reference/primitives.html#members.skipMany1) вместо `many` и `many1` .
 
-Пожалуйста, смотрите главу [5.8 Customizing error messages<sup>en</sup>] (http://www.quanttec.com/fparsec/users-guide/customizing-error-messages.html) руководства пользователя, чтобы узнать больше о настройке сообщений об ошибках.
-{{% /alert %}}
-
-Если вам не нужен результат работы синтаксического анализатора и просто хотите пропустить полученный список, вы можете использовать оптимизированные комбинаторы [`skipMany`](http://www.quanttec.com/fparsec/reference/primitives.html#members.skipMany) или [`skipMany1`](http://www.quanttec.com/fparsec/reference/primitives.html#members.skipMany1) вместо `many` и `many1` .
+Если вы хотите пропустить последовательность и вам не нужен список результатов парсинга, вы можете использовать оптимизированный комбинатор [`skipMany`](http://www.quanttec.com/fparsec/reference/primitives.html#members.skipMany) и [`skipMany1`](http://www.quanttec.com/fparsec/reference/primitives.html#members.skipMany1) вместо `many` и `many1` соответственно.
 
 Другим часто используемым комбинатором для синтаксического разбора последовательностей является [`sepBy`](http://www.quanttec.com/fparsec/reference/primitives.html#members.sepBy):
 

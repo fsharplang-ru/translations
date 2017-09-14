@@ -1,34 +1,6 @@
-+++
-# Authors. Comma separated list, e.g. `["Bob Smith", "David Jones"]`.
-authors = ["Стефан Тольксдорф","Дмитрий Власов"]
-
-# Publication type.
-publication_types = ["7", "3"]
-
-# Publication name and optional abbreviated version.
-date = "2017-01-28"
-title = "Учебник библиотеки FParsec"
-publication = "Перевод учебника библиотеки FParsec"
-abstract = "Этот учебник знакомит вас с основными понятиями библиотеки FParsec. Цель этого учебника это дать вам возможность попробовать создать приложения синтаксического разбора с помощью библиотеки FParsec. Что будет достаточной основой для того, чтобы вы могли в дальнейшем использовать FParsec самостоятельно с помощью руководства пользователя, справочника по API и примеров синтаксических анализаторов."
-
-# Does this page contain LaTeX math? (true/false)
-math = false
-
-# Does this page require source code highlighting? (true/false)
-highlight = true
-
-# Is this a selected publication? (true/false)
-selected = true
-
-# Links (optional)
-url_code = "https://github.com/stephan-tolksdorf/fparsec"
-url_dataset = "https://bitbucket.org/fparsec/main/src/c234349e7b738e09a1b9eb53f5f1ef77d584f09b/Samples/?at=default"
-url_source = "http://www.quanttec.com/fparsec/tutorial.html"
-+++
-
 # Введение
 
-Этот учебник знакомит вас с основными понятиями библиотеки FParsec. Наша цель &mdash; дать вам возможность попробовать создать приложения синтаксического разбора с помощью библиотеки FParsec. Мы охватим только основные идеи и дадим беглый обзор библиотеки по [API](https://ru.wikipedia.org/wiki/API)<sup>en</sup>. Но, надеемся, это будет достаточной основой для того, чтобы вы могли в дальнейшем использовать FParsec самостоятельно с помощью: [руководства пользователя](http://www.quanttec.com/fparsec/users-guide/)<sup>en</sup>, [справочника по API](http://www.quanttec.com/fparsec/reference/)<sup>en</sup> и примеров синтаксических анализаторов в папке [Samples](https://bitbucket.org/fparsec/main/src/c234349e7b738e09a1b9eb53f5f1ef77d584f09b/Samples/?at=default)<sup>en</sup>.
+Этот учебник познакомит вас с базовыми концепциями  [FParsec](https://github.com/stephan-tolksdorf/fparsec). Наша цель &mdash; дать вам представление о том, как создавать приложения синтаксического разбора с помощью этой библиотеки. Мы охватим только основные идеи и бегло рассмотрим [API](https://ru.wikipedia.org/wiki/API). Но, надеемся, что этого материала будет достаточно для того, чтобы вы могли в дальнейшем использовать FParsec самостоятельно с помощью: [руководства пользователя](http://www.quanttec.com/fparsec/users-guide/), [справочника по API](http://www.quanttec.com/fparsec/reference/) и примеров синтаксических анализаторов в папке [Samples](https://github.com/stephan-tolksdorf/fparsec/tree/master/Samples).
 
 # Оглавление
 1. [Вступление](01-preliminaries) 
@@ -47,4 +19,3 @@ url_source = "http://www.quanttec.com/fparsec/tutorial.html"
 # Учебник на других языках
 - [Стефан Тольксдорф](https://github.com/stephan-tolksdorf), авторский текст на [английском языке](http://www.quanttec.com/fparsec/tutorial.html).
 * [Gab_km](https://twitter.com/gab_km), перевод на [японский язык](http://blog.livedoor.jp/gab_km/archives/1437534.html).
-  

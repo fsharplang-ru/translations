@@ -1,26 +1,4 @@
-﻿+++
-weight = 11
-
-# Publication type.
-publication_types = ["3","7"]
-
-# Publication name and optional abbreviated version.
-date = "2017-01-28"
-title = "Глава 11. Синтаксический анализ JSON"
-publication = "Учебник библиотеки FParsec"
-
-# Does this page contain LaTeX math? (true/false)
-math = false
-
-# Does this page require source code highlighting? (true/false)
-highlight = true
-
-# Is this a selected publication? (true/false)
-selected = false
-
-# Links (optional)
-url_source = "http://www.quanttec.com/fparsec/tutorial.html#parsing-json"
-+++
+# Синтаксический анализ JSON"
 
 Now that we have discussed the basics of FParsec we are well prepared to work through a real world parser example: a JSON parser.
 
