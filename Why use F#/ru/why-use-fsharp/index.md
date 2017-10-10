@@ -1,15 +1,15 @@
 ---
 layout: page
 title: "Зачем использовать F#?"
-description: "Почему стоит попробовать F# в Вашем следующем проекте"
+description: "Почему стоит попробовать F# в вашем следующем проекте"
 nav: why-use-fsharp
 hasIcons: 1
 image: "/assets/img/four-concepts2.png"
 ---
 
-Хотя F# хорош для использования в специальных областях, таких как научные исследования или анализ даных, он также отлично подходит для разработки корпоративных приложений.
+Хотя F# хорош для использования в специализированных областях, таких как научные исследования или анализ даных, он также отлично подходит для разработки корпоративных приложений.
  _Although F# is great for specialist areas such as scientific or data analysis, it is also an excellent choice for enterprise development._
-Ниже перечислены пять веских причин рассмотреть использование F# для Вашего следующего проекта.
+Ниже перечислены пять веских причин подумать об использовании F# в вашем следующем проекте.
  _Here are five good reasons why you should consider using F# for  your next project._
 
 ## ![](../assets/img/glyphicons/glyphicons_030_pencil.png) Краткость (Conciseness)
@@ -47,7 +47,7 @@ let worker = Worker jdoe
 
 ## ![](../assets/img/glyphicons/glyphicons_343_thumbs_up.png) Удобство (Convenience)
 
-Многие общие задачи программирования решаются гораздо проще с использованием F#. Среди них такие, как создание и использование [сложных объявлений типов](../posts/conciseness-type-definitions.md), [обработка списков](../posts/conciseness-extracting-boilerplate.md), [сравнение и равенство](../posts/convenience-types.md), [конечные автоматы/машины состояний](../posts/designing-with-types-representing-states.md) и многое другое.
+Многие общие задачи программирования решаются гораздо проще с использованием F#. Среди них такие, как создание и использование [сложных объявлений типов](../posts/conciseness-type-definitions.md), [обработка списков](../posts/conciseness-extracting-boilerplate.md), [(?) сравнение и эквивалентность (?)](../posts/convenience-types.md), [конечные автоматы/машины состояний](../posts/designing-with-types-representing-states.md) и многое другое.
 Many common programming tasks are much simpler in F#.  This includes things like creating and using
  [complex type definitions](../posts/conciseness-type-definitions.md), doing [list processing](../posts/conciseness-extracting-boilerplate.md),
  [comparison and equality](../posts/convenience-types.md), [state machines](../posts/designing-with-types-representing-states.md), and much more.
@@ -81,7 +81,7 @@ as [null reference exceptions](../posts/the-option-type.md#option-is-not-null).
 Значения [по умолчанию неизменяемы](../posts/correctness-immutability.md), что предупреждает большое множество ошибок.
 Values are [immutable by default](../posts/correctness-immutability.md), which prevents a large class of errors.
 
-В дополнение к вышеописанному, Вы часто можете описать бизнес-логику, используя [систему типов](../posts/correctness-exhaustive-pattern-matching.md) таким образом, чтобы было буквально [невозможно написать ошибочный/некорректный код](../posts/designing-for-correctness.md), а то и по возможности использовать механизм [единиц измерений](../posts/units-of-measure.md), таким образом заметно уменьшив необходимость в модульных тестах (юнит-тестах).
+В дополнение к вышеописанному, вы часто можете описать бизнес-логику, используя [систему типов](../posts/correctness-exhaustive-pattern-matching.md) таким образом, чтобы было буквально [невозможно написать ошибочный/некорректный код](../posts/designing-for-correctness.md), а то и по возможности использовать механизм [единиц измерений](../posts/units-of-measure.md), таким образом заметно уменьшив необходимость в модульных тестах (юнит-тестах).
 In addition, you can often encode business logic using the [type system](../posts/correctness-exhaustive-pattern-matching.md) itself in such a way
 that it is actually [impossible to write incorrect code](../posts/designing-for-correctness.md)
 or mix up [units of measure](../posts/units-of-measure.md), greatly reducing the need for unit tests.
@@ -153,10 +153,10 @@ Of course, F# is [part of the .NET ecosystem](../posts/completeness-seamless-dot
 It runs on most platforms, including Linux and smart phones (via Mono and the new .NET Core).
 
 
-В конечном счёте, он хорошо интегрирован с Visual Studio (Windows) и Xamarin (Mac), а значит, Вы можете использовать _отличную/качественную/полноценную_ IDE с поддержкой IntelliSense, отладчиком, а также множеством расширений для модульного тестирования (юнит-тестов), контроля версий и прочих задач процесса разработки.
+В конечном счёте, он хорошо интегрирован с Visual Studio (Windows) и Xamarin (Mac), а значит, вы можете использовать _отличную/качественную/полноценную_ IDE с поддержкой IntelliSense, отладчиком, а также множеством расширений для модульного тестирования (юнит-тестов), контроля версий и прочих задач процесса разработки.
 Finally, it is well integrated with Visual Studio (Windows) and Xamarin (Mac), which means you get a great IDE with IntelliSense support, a debugger,
 and many plug-ins for unit tests, source control, and other development tasks.
-А в случае Linux вместо вышеперечисленного Вы можете использовать IDE MonoDevelop. Or on Linux, you can use the MonoDevelop IDE instead.
+А в случае Linux вместо вышеперечисленного вы можете использовать IDE MonoDevelop. Or on Linux, you can use the MonoDevelop IDE instead.
 
 ```fsharp
 // "нечистый" код, если он нужен (impure code when needed)
