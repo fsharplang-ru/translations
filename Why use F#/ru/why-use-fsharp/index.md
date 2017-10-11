@@ -34,15 +34,15 @@ let square x = x * x
 let sq = square 42
 
 // простые типы -- в одну строку (simple types in one line)
-type Person = {First:string; Last:string}
+type Person = { First:string; Last:string }
 
 // сложные типы -- лишь в несколько строк (complex types in a few lines)
 type Employee =
-| Worker of Person
-| Manager of Employee list
+    | Worker of Person
+    | Manager of Employee list
 
 // вывод типов (type inference)
-let jdoe = {First="John";Last="Doe"}
+let jdoe = { First="John"; Last="Doe" }
 let worker = Worker jdoe
 ```
 
@@ -58,9 +58,9 @@ or that [combine existing functions](../posts/conciseness-functions-as-building-
 
 ```fsharp
 // автоматически реализуемые эквивалентность и сравнение (automatic equality and comparison)
-type Person = {First:string; Last:string}
-let person1 = {First="john"; Last="Doe"}
-let person2 = {First="john"; Last="Doe"}
+type Person = { First:string; Last:string }
+let person1 = { First="john"; Last="Doe" }
+let person2 = { First="john"; Last="Doe" }
 printfn "Equal? %A"  (person1 = person2)
 
 // простая работа с IDisposable с использованием ключевого слова "use" (easy IDisposable logic with "use" keyword)
@@ -94,9 +94,9 @@ person1.First <- "new name"  //ошибка присвоения (assignment err
 
 // нет необходимости делать проверку на null (never have to check for nulls)
 let makeNewString str =
-// всегда можно без опасений дополнить str (str can always be appended to safely)
-let newString = str + " new!"
-newString
+    // всегда можно без опасений дополнить str (str can always be appended to safely)
+    let newString = str + " new!"
+    newString
 
 // описывайте бизнес-логику в типах/представляйте бизнес-логику в типах (embed business logic into types)
 emptyShoppingCart.remove   // compile error!
@@ -122,16 +122,16 @@ and [functional reactive programming](../posts/concurrency-reactive.md).
 
 ```fsharp
 // простая асинхронная логика с использованием ключевого слова/конструкции "async" (easy async logic with "async" keyword)
-let! result = async {something}
+let! result = async { something }
 
 // простая параллельная обработка (easy parallelism)
-Async.Parallel [ for i in 0..40 ->
-    async { return fib(i) } ]
+Async.Parallel [ for i in 0..40 -> async { return fib(i) } ]
 
 // очереди сообщений (message queues)
-MailboxProcessor.Start(fun inbox-> async{
-    let! msg = inbox.Receive()
-    printfn "message is: %s" msg
+MailboxProcessor.Start(fun inbox->
+    async{
+        let! msg = inbox.Receive()
+        printfn "message is: %s" msg
     })
 ```
 
@@ -169,11 +169,12 @@ type IEnumerator<'a> =
 type System.Int32 with
     member this.IsEven = this % 2 = 0
 
-let i=20
+let i = 20
 if i.IsEven then printfn "'%i' is even" i
 
 // код создания и работы с графическим пользовательским интерфейсом (UI code)
 open System.Windows.Forms
+
 let form = new Form(Width= 400, Height = 300,
 Visible = true, Text = "Hello World")
 form.TopMost <- true
