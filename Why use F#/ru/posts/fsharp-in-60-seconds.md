@@ -1,107 +1,121 @@
 ---
 layout: post
-title: "F# syntax in 60 seconds"
-description: "A very quick overview on how to read F# code"
+title: "Синтаксис F# за 60 секунд"
+description: "Очень краткий обзор того, как читать F#-код"
 nav: why-use-fsharp
-seriesId: "Why use F#?"
+seriesId: "Зачем использовать F#?"
 seriesOrder: 2
 ---
+Вот очень быстрый обзор того, как читать F#-код, для незнакомых с синтаксисом данного языка.
 
-Here is a very quick overview on how to read F# code for newcomers unfamiliar with the syntax.
+Этот обзор, конечно же, не очень подробный, но его должно быть достаточно для того, чтобы вы могли, читая фрагменты кода в данном цикле статей, понимать их смысл. Не волнуйтесь, если что-то из них вам останется неясным, т.к. я поясню всё более детально, когда мы подберёмся к реальным примерам кода.
 
-It is obviously not very detailed but should be enough so that you can read and get the gist of the upcoming examples in this series. Don't worry if you don't understand all of it, as I will give more detailed explanations when we get to the actual code examples.
+Два основных различия между синтаксисами F# и стандартного C-подобного языка следующие:
 
-The two major differences between F# syntax and a standard C-like syntax are:
+* Для отделения блоков кода не используются фигурные скобки. Вместо этого применяются отступы (похожим образом делается в Python).
+* Для разделения параметров [функций] используются пробелы, а не запятые.
 
-* Curly braces are not used to delimit blocks of code. Instead, indentation is used (Python is similar this way).
-* Whitespace is used to separate parameters rather than commas.
+Некоторые находят синтаксис F# отталкивающим. Если вы один из них, то специально для вас привожу цитату:
 
-Some people find the F# syntax off-putting. If you are one of them, consider this quote:
+>"Улучшать свою нотацию таким образом, чтобы не (смущать/приводить в замешательство) людей в первые 10 минут её чтения, но при этом способствовать ухудшению читаемости (после/потом/позже), есть очень плохая ошибка."
+> (Дэвид МакАйвер, из [(поста/статьи) о синтаксисе Scala](http://rickyclarkson.blogspot.co.uk/2008/01/in-defence-of-0l-in-scala.html)).
 
-> "Optimising your notation to not confuse people in the first 10 minutes of seeing it but to hinder readability ever after is a really bad mistake."
-> (David MacIver, via [a post about Scala syntax](http://rickyclarkson.blogspot.co.uk/2008/01/in-defence-of-0l-in-scala.html)).
+Лично я думаю, что синтаксис F# очень (ясен/понятен/чёток) и простой, когда к нему привыкаешь. Во многих аспектах он проще, чем синтаксис C#, с меньшим количеством ключевых слов и исключений.
 
-Personally, I think that the F# syntax is very clear and straightforward when you get used to it. In many ways, it is simpler than the C# syntax, with fewer keywords and special cases.
+Фрагмент кода ниже -- простой F#-скрипт, демонстрирующий большинство понятий, необходимых вам на регулярной основе.
 
-The example code below is a simple F# script that demonstrates most of the concepts that you need on a regular basis.
+Я призываю вас опробовать данный код в интерактивном режиме и немного "поиграться" с ним! Или же:
 
-I would encourage you to test this code interactively and play with it a bit! Either:
-
-* Type this into a F# script file (with .fsx extension) and send it to the interactive window. See the ["installing and using F#"](../installing-and-using/index.md) page for details.
-* Alternatively, try running this code in the interactive window. Remember to always use `;;` at the end to tell the interpreter that you are done entering and ready to evaluate.
+* (Введите/перепечатайте) его в F#-скрипт-файл (с расширением .fsx) и отправьте его на исполнение в интерактивное окно (F# Interactive). Более подробно о том, как это делается, смотрите на странице ["установка и использование F#"].
+* Также можно запустить этот код в интерактивном окне непосредственно. Не забывайте всегда ставить `;;` в конце строки для указания интерпретатору, что вы закончили ввод и готовы его (вычислить/запустить).
 
 ```fsharp
-// single line comments use a double slash
-(* multi line comments use (* . . . *) pair
+//однострочные комментарии начинаются с двойного слэша
+(*
+    многострочные комментарии помещаются между двумя скобками такого вида: (* . . . *)
+*)
 
--end of multi line comment- *)
-
-// ======== "Variables" (but not really) ==========
-// The "let" keyword defines an (immutable) value
+// ======== "Переменные" (но на самом деле не переменные)" ======
+// С помощью ключевого слова "let" (задаётся/определяется) новое значение (неизменяемое)
 let myInt = 5
 let myFloat = 3.14
-let myString = "hello"  //note that no types needed
+let myString = "hello"  //заметьте, в объявлении типов нет необходимости
 
-// ======== Lists ============
-let twoToFive = [2;3;4;5]        // Square brackets create a list with
-                                 // semicolon delimiters.
-let oneToFive = 1 :: twoToFive   // :: creates list with new 1st element
-// The result is [1;2;3;4;5]
-let zeroToFive = [0;1] @ twoToFive   // @ concats two lists
+// ======== Списки ============
+let twoToFive = [2; 3; 4; 5]        // С помощью квадратных скобок
+                                 // задаётся список, разделителем элементов
+                                 // в котором является точка с запятой.
 
-// IMPORTANT: commas are never used as delimiters, only semicolons!
+let oneToFive = 1 :: twoToFive   // :: создаёт список с новым 1-м элементом
+// Результат: [1; 2; 3; 4;5 ]
+let zeroToFive = [0; 1] @ twoToFive   // @ используется для
+                                     // конкатенации двух списков
 
-// ======== Functions ========
-// The "let" keyword also defines a named function.
-let square x = x * x          // Note that no parens are used.
-square 3                      // Now run the function. Again, no parens.
+// ВАЖНО: в качестве разделителей никогда не используются запятые,
+// только точки с запятой!
 
-let add x y = x + y           // don't use add (x,y)! It means something
-                              // completely different.
-add 2 3                       // Now run the function.
+// ======== Функции ========
+// С помощью ключевого слова "let" также задаётся и именнованная функция.
+let square x = x * x          // Заметьте, что круглые скобки не используются.
+square 3                      // А теперь выполним функцию.
+                              // Опять же, никаких круглых скобок.
 
-// to define a multiline function, just use indents. No semicolons needed.
+let add x y = x + y           // не пишите add (x,y)! Это означает
+                              // нечто совершенно другое.
+add 2 3                       // А теперь выполняем функцию.
+
+// для задания многострочной функции просто используйте отступы.
+// Точки с запятой не требуются.
 let evens list =
-    let isEven x = x%2 = 0     // Define "isEven" as an inner ("nested") function
-    List.filter isEven list    // List.filter is a library function
-                              // with two parameters: a boolean function
-                              // and a list to work on
+    let isEven x = x % 2 = 0  // Задаём функцию "isEven" как внутреннюю ("вложенную")
+    List.filter isEven list   // List.filter -- это библиотечная функция
+                              // с двумя параметрами:
+                              // булевой функцией и списком на обработку
+                              // (a boolean function and a list to work on)
 
-evens oneToFive               // Now run the function
+evens oneToFive               // А теперь выполним функцию.
 
-// You can use parens to clarify precedence. In this example,
-// do "map" first, with two args, then do "sum" on the result.
-// Without the parens, "List.map" would be passed as an arg to List.sum
+// Вы можете использовать круглые скобки для уточнения
+// (приоритета/последовательности)применения параметров.
+// В данном примере сначала примените "map" к двум аргументам,
+// а затем к результату этого примените "sum".
+// Без расстановки круглых скобок "List.map" будет считаться
+// аргументов функции "List.sum"
 let sumOfSquaresTo100 =
-    List.sum ( List.map square [1..100] )
+    List.sum ( List.map square [1 .. 100] )
 
-// You can pipe the output of one operation to the next using "|>"
-// Here is the same sumOfSquares function written using pipes
+// Вы можете передавать выходное значение одной операции на вход к следующей
+// (как по конвейеру), используя оператор "|>".
+// Вот, например, та же функция sumOfSquares, написанная с использованием
+// этих, так называемых, конвейеров
 let sumOfSquaresTo100piped =
-    [1..100] |> List.map square |> List.sum  // "square" was defined earlier
+    [1 .. 100] |> List.map square |> List.sum  // "square" была задана ранее
 
-// you can define lambdas (anonymous functions) using the "fun" keyword
+// вы можете задавать лямбда-функции (анонимные функции)
+// с помощью ключевого слова "fun"
 let sumOfSquaresTo100withFun =
-    [1..100] |> List.map (fun x->x*x) |> List.sum
+    [1 .. 100] |> List.map (fun x -> x * x) |> List.sum
 
-// In F# returns are implicit -- no "return" needed. A function always
-// returns the value of the last expression used.
+// В F# возвращаемое значение задаётся неявно -- "return" не требуется.
+// Функция всегда возвращает значение последнего
+// определённого в ней выражения.
 
-// ======== Pattern Matching ========
-// Match..with.. is a supercharged case/switch statement.
+// ======== Сопоставление с образцом (Pattern Matching) ========
+// match..with.. -- это (улучшенная/"прокачанная") инструкция case/switch.
 let simplePatternMatch =
     let x = "a"
     match x with
     | "a" -> printfn "x is a"
     | "b" -> printfn "x is b"
-    | _ -> printfn "x is something else"   // underscore matches anything
+    | _ -> printfn "x is something else"  // нижнее подчёркивание
+                                          // сопоставляется с чем угодно
 
-// Some(..) and None are roughly analogous to Nullable wrappers
+// Some(..) и None -- приблизительные аналоги (?) обёрток для Nullable (?)
 let validValue = Some(99)
 let invalidValue = None
 
-// In this example, match..with matches the "Some" and the "None",
-// and also unpacks the value in the "Some" at the same time.
+// В данном примере match..with сопоставляется с "Some" и "None"
+// и в то же время "распаковывает" значение, "хранящееся" в "Some".
 let optionPatternMatch input =
     match input with
     | Some i -> printfn "input is an int=%d" i
@@ -110,44 +124,47 @@ let optionPatternMatch input =
 optionPatternMatch validValue
 optionPatternMatch invalidValue
 
-// ========= Complex Data Types =========
+// ========= (Сложные/составные) типы данных =========
 
-// Tuple types are pairs, triples, etc. Tuples use commas.
-let twoTuple = 1,2
-let threeTuple = "a",2,true
+// К типу-кортежу относятся пары, тройки и т.п.
+// В кортежах используются запятые (в качестве разделителей).
+let twoTuple = 1, 2
+let threeTuple = "a", 2, true
 
-// Record types have named fields. Semicolons are separators.
-type Person = { First:string; Last:string }
-let person1 = { First="john"; Last="Doe" }
+// У типов-записей имеются именованные поля.
+// Разделителями являются точки с запятой.
+type Person = { First : string; Last : string }
+let person1 = { First = "john"; Last = "Doe" }
 
-// Union types have choices. Vertical bars are separators.
+// С помощью типов-объединений описываются вариативные значения.
+// Разделителем является вертикальная черта.
 type Temp =
     | DegreesC of float
     | DegreesF of float
 let temp = DegreesF 98.6
 
-// Types can be combined recursively in complex ways.
-// E.g. here is a union type that contains a list of the same type:
+// Типы могут комбинироваться рекурсивно различными сложными способами.
+// Например, вот тип-объединение, содержащий в себе список этого же типа:
 type Employee =
     | Worker of Person
     | Manager of Employee list
-let jdoe = { First="John";Last="Doe" }
+let jdoe = { First = "John"; Last = "Doe" }
 let worker = Worker jdoe
 
-// ========= Printing =========
-// The printf/printfn functions are similar to the
-// Console.Write/WriteLine functions in C#.
+// ========= Текстовый вывод =========
+// Функции printf/printfn очень похои на функции
+// Console.Write/WriteLine из C#.
 printfn "Printing an int %i, a float %f, a bool %b" 1 2.0 true
-printfn "A string %s, and something generic %A" "hello" [1;2;3;4]
+printfn "A string %s, and something generic %A" "hello" [1; 2; 3; 4]
 
-// all complex types have pretty printing built in
+// все сложные типы имеют встроенное наглядное текстовое представление (вывод)
 printfn "twoTuple=%A,\nPerson=%A,\nTemp=%A,\nEmployee=%A"
          twoTuple person1 temp worker
 
-// There are also sprintf/sprintfn functions for formatting data
-// into a string, similar to String.Format.
+// Также имеются функции sprintf/sprintfn
+// для форматированного вывода в строку, подобно String.Format.
 
 
 ```
 
-And with that, let's start by comparing some simple F# code with the equivalent C# code.
+Ну а теперь давайте приступим к сравнению простых фрагментов F#-кода с эквивалентными им фрагментами кода на C#.
