@@ -1,20 +1,20 @@
-# Finer Points of F# Value Restriction
-One of distinguishing features of F#, compared with more conventional programming languages, is its powerful and pervasive type inference. Because of it, you almost never write type annotations in F# programs, typing less, reducing verbosity and getting fantastically elegant code in the end.
+# Тонкости value restriction в F#
+Одной из отличительных особенностей языка F#, по сравнению с более распространёнными языками программирования, является мощный и всеобъемлющий автоматический вывод типов. Благодаря ему в программах на F# вы почти никогда не указываете типы явно, набираете меньше текста, и получаете в итоге более краткий, фантастически элегантный код.
 
-Type inference algorithms are a fascinating topic – there is an interesting and beautiful theory behind them. Today we will consider one interesting aspect of type inference in F# - it might give you a glimpse of what kind of challenges coming up with a good algorithm in this space presents, and hopefully explain away a stumbling block that F# developers occasionally encounter.
+Алгоритмы автоматического вывода типов - захватывающая тема, за ними стоит интересная и красивая теория. Сегодня мы рассмотрим один интересный аспект автоматического вывода типов в F#, который, возможно, даст вам представление о том, какие сложности возникают в хороших современных алгоритмах такого рода, и, надеюсь, объяснит один камень преткновения, с которым время от времени сталкиваются F# программисты.
 
-Our topic for today is value restriction. MSDN has a [nice article]("http://msdn.microsoft.com/en-us/library/dd233183(v=VS.100).aspx") on value restriction and automatic generalization in F# – and gives a very sound practical advice on what to do if you encounter value restriction in your program. However, MSDN article simply states matter-of-factly: “The compiler performs automatic generalization only on complete function definitions that have explicit arguments, and on simple immutable values” and does not provide much rationale behind this - rightly so, as MSDN is a reference source. This post is focused on the reasoning underlying value restriction – I will be answering the “why”, not the “what to do”.
+Нашей темой сегодня будет *ограничение на значения (value restriction)*. На MSDN есть [хорошая статья]("http://msdn.microsoft.com/en-us/library/dd233183(v=VS.100).aspx") на тему ограничения на значения и автоматического обобщения типов в  F#, которая даёт очень разумные практические советы, что делать, если вы столкнулись с этим в вашем коде. Однако, эта статья просто как ни в чём не бывало констатирует: "*Компилятор выполняет автоматическое обобщение только на полных определениях функций с явно указанными аргументами и на простых неизменяемых значениях*", и не даёт этому практически никаких обоснований, что вполне справедливо, потому что MSDN - это просто справочный материал. Мой пост сфокусирован на рассуждениях, лежащих в основе ограничения на значения - я буду отвечать на вопрос "почему?", а не "что делать?".
 
-A powerful feature of F# type inference is automatic generalization; you define a simple function, such as identity:
+*Автоматическое обобщение (automatic generalization)* - мощная возможность автоматического вывода типов F#. Определим простую функцию, например функцию тождества: 
 
     let id x = x
 
-There are no type annotations, but F# compiler deduces that id has type 'a -> 'a – given an argument of a certain type, it returns a result of the same type. Not particularly clever, but note that the F# compiler inferred an implicit generic type parameter 'a for function id.
+Здесь нет явных аннотаций типов (type annotations), но компилятор F# выводит для этой функции тип 'a -> 'a - функция принимает аргумент некоего типа и возвращает результат точно такого же типа. Это не особенно сложно, но заметьте, что компилятор F# вывел неявный тип-параметр (generic type parameter) 'a для функции id.
 
-We can combine id with List.map, itself a generic function:
+Мы можем скомбинировать функцию id с функцией List.map, которая сама по себе полиморфна (generic function):
 
     let listId l = List.map id l
-(not a very useful function either, but useful code is not my goal today). F# compiler gives listId a correct type, 'a list -> 'a list; again, an automatic generalization takes place. Ok, but since List.map is a curried function, we might be tempted to strip argument l for left-hand side and right hand side of the definition:
+(не очень полезная функция, но полезный код - это не сегодняшняя моя цель). Компилятор F#  даёт функции listId корректный тип 'a list -> 'a list; снова произошло автоматическое обобщение. Но поскольку List.map - каррированная функция, у нас может возникнуть искушение отбросить аргумент l слева и справа:
 
     let listId = List.map id
 But suddenly F# compiler complains:
