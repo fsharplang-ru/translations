@@ -17,33 +17,33 @@
 (не очень полезная функция, но полезный код - это не сегодняшняя моя цель). Компилятор F#  даёт функции listId корректный тип 'a list -> 'a list; снова произошло автоматическое обобщение. Но поскольку List.map - каррированная функция, у нас может возникнуть искушение отбросить аргумент l слева и справа:
 
     let listId = List.map id
-But suddenly F# compiler complains:
+Но F# компилятор неожиданно возмущается:
 
     Program.fs(8,5): error FS0030: Value restriction. 
     The value 'listId' has been inferred to have generic type
          val listId : ('_a list -> '_a list)
-Either make the arguments to 'listId' explicit or,
-if you do not intend for it to be generic, add a type annotation.
+    Either make the arguments to 'listId' explicit or,
+    if you do not intend for it to be generic, add a type annotation.
 
-What is going on here?
+Что происходит?
 
-The MSDN article suggests 4 ways to fix a “let” definition that is rejected due to value restriction:
+Статья на MSDN предлагает 4 способа исправить let-определение, которое отвергается компилятором из-за ограничения на значения:
+* Ограничить тип так, чтобы он перестал быть обобщённым, добавив явную аннотацию типа к значению или параметру.
+* Если проблема заключается в необобщаемой конструкции (сnongeneralizable construct) в определении полиморфной функции (такой, как композиция функций или неполное применение аргументов к каррированной функции), попробуйте переписать определение функции на обыкновеное
+* Если проблема заключается в выражении, слишком сложном для обобщения, превратите его в функцию, добавив неиспользуемый параметр.
+* Добавьте явные полиморфные типы-параметры. Это способ используется редко.
 
-Constrain a type to be nongeneric by adding an explicit type annotation to a value or parameter.
-If the problem is using a nongeneralizable construct to define a generic function, such as a function composition or incompletely applied curried function arguments, try to rewrite the function as an ordinary function definition.
-If the problem is an expression that is too complex to be generalized, make it into a function by adding an extra, unused parameter.
-Add explicit generic type parameters. This option is rarely used.
-Option 1 is not for us – we want listId to be generic.
+Первый способ не для нас - мы хотим, чтобы функция listId была полиморфной.
 
-Option 2 will get us back to an explicit parameter for list – and this is exactly the canonical way to define function like listId in F#.
+Второй способ вернёт нас к явному указанию параметра list - и это канонический способ определения функций вроде listId в языке F#.
 
-Option 3 applies when you define something that is not a function; in our case it yields
+Способ 3 применим, когда нужно определить что-то, не являющееся функцией, в нашем случае это даёт
 
     let listId () = List.map id
 
-which is not compelling.
+что неубедительно.
 
-In real code, I would go with option 2 and keep the parameter explicit. But for the sake of learning, let us try the “rarely used” option 4:
+В рабочем коде я бы поспользовался вторым способом и оставил параметр функции явным. Но ради обучения давайте попробуем "редко используемый" четвёртый способ:
 
     let listId<'T> : 'T list -> 'T list = List.map id
 
