@@ -47,31 +47,31 @@
 
     let listId<'T> : 'T list -> 'T list = List.map id
 
-This compiles – and works as expected. On the face of it, it looks like a type inference failure - the compiler could not figure the type out, so we added a type annotation to fix it. But wait – compiler has almost inferred this type for us - error message actually mentions it! (With the weird '_a type variable). As if the compiler was dumbed down in this particular case – why?
+Это компилируется и работает так, как и ожидалось. На первый взгляд кажется, что это ошибка вывода типов - компилятор не может определить тип, поэтому мы добавили аннотацию, чтобы ему помочь. Но подождите, компилятор почти вывел этот тип - он же упоминается в сообщении об ошибке! (С таинственной переменной типа (type variable) '_a') Будто бы компилятор был ошарашен конкретно этим случаем - почему?
 
-For a very sound reason. To see it, let us consider another case of value restriction. This reference cell of list will not compile:
+По очень разумной причине. Чтобы увидеть её, давайте рассмотрим другой случай ограничения на значения. Эта ссылочная ячейка (reference cell) на список не скомпилируется:
 
     let v = ref []
-Program.fs(16,5): error FS0030: Value restriction. 
-The value 'v' has been inferred to have generic type
-    val v : '_a list ref    
-Either define 'v' as a simple data term, make it a function with explicit arguments or, 
-if you do not intend for it to be generic, add a type annotation.
+    Program.fs(16,5): error FS0030: Value restriction. 
+    The value 'v' has been inferred to have generic type
+        val v : '_a list ref    
+    Either define 'v' as a simple data term, make it a function with explicit arguments or, 
+    if you do not intend for it to be generic, add a type annotation.
 
-Let us work it around by adding explicit type annotations:
+Давайте обойдём это с помощью явных аннотаций типов:
 
     >let v<'T> : 'T list ref = ref []
     val v<'T> : 'T list ref
 
-Compiler is happy. Let us try to assign some value to v:
+Компилятор доволен. Давайте попробуем присвоить v какое-нибудь значение:
 
     > v := [1];;
     val it : unit = ()
-Surely we now have a list with a single element 1 in v?
+Правда же, v теперь ссылается на список с единственным элементом 1?
 
     > let x : int list = !v;;
     val x : int list = []
-Oops - contents of v is an empty list! Where did our “[1]” go?
+Упс! Содержимое v - пустой список! Куда делся наш [1]?
 
 Here is what happened. Our assignment to v can actually be written like this:
 
