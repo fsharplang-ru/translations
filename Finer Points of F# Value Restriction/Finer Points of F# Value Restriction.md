@@ -29,7 +29,7 @@
 
 Статья на MSDN предлагает 4 способа исправить let-определение, которое отвергается компилятором из-за ограничения на значения:
 * Ограничить тип так, чтобы он перестал быть обобщённым, добавив явную аннотацию типа к значению или параметру.
-* Если проблема заключается в необобщаемой конструкции (сnongeneralizable construct) в определении полиморфной функции (такой, как композиция функций или неполное применение аргументов к каррированной функции), попробуйте переписать определение функции на обыкновеное
+* Если проблема заключается в необобщаемой конструкции (nongeneralizable construct) в определении полиморфной функции (такой, как композиция функций или неполное применение аргументов к каррированной функции), попробуйте переписать определение функции на обыкновеное
 * Если проблема заключается в выражении, слишком сложном для обобщения, превратите его в функцию, добавив неиспользуемый параметр.
 * Добавьте явные полиморфные типы-параметры. Это способ используется редко.
 
@@ -73,17 +73,17 @@
     val x : int list = []
 Упс! Содержимое v - пустой список! Куда делся наш [1]?
 
-Here is what happened. Our assignment to v can actually be written like this:
+Вот что произошло. Наше присваивание на самом деле может быть переписано так:
 
     (v<int>):=[1]
 
-Left-hand-side of this assignment is an application of v to type argument int. v itself is not a reference cell – it is a type function: given a type argument, it will produce a reference cell. Our assignment creates a fresh reference cell and assigns “[1]” to it. Likewise, if we make type arguments in dereferencing v explicit:
+Левая сторона этого присваивания - это применение v к аргументу типа (type argument) int. А v, в свою очередь, это не ссылочкая ячейка, а функция типа: получив на входе аргумент типа, она вернёт ссылочную ячейку. Наше выражение создаёт новую ссылочную ячейку и присваивает ей "[1]". Аналогично, если мы явно укажем аргумент типа в разыменовании v:
 
     let x = !(v<int>)
 
-we see that v is applied to type argument int again, and produces a fresh reference cell containing an empty list.
+мы увидим, что v снова применяется к аргументу типа, и возвращает свежую ссылочную ячейку, содержащую пустой список.
 
-To make all the talk about type functions concrete, let us examine the resulting IL. If we compile the definition of v, trusty Reflector will show us that v is:
+Чтобы конкретизировать разговор о функциях типа, давайте изучим полученный IL. Если мы скомпилируем определение v, наш верный Reflector покажет нам, что v это:
 
     public static FSharpRef<FSharpList<T>> v<T>(){
            return Operators.Ref<FSharpList<T>>(FSharpList<T>.get_Empty());
