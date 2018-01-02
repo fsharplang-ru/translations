@@ -89,13 +89,13 @@
            return Operators.Ref<FSharpList<T>>(FSharpList<T>.get_Empty());
     }
 
-What we perceived as a single value in F# is actually a generic method without parameters in the underlying IL. Both assignment and dereference of v will call the IL method, and this will indeed produce a fresh reference cell every time.
+То, что мы воспринимаем как значение в F#, на самом деле является полиморфным методом без параметров в соответствующем IL. И присваивание, и разыменование v вызывают IL метод, который будет каждый раз возвращать новую ссылочную ячейку.
 
-However, nothing in
+Однако, ничего в выражении
 
     let v = ref []
 
-suggests that the above behavior. v looks an ordinary value, and not a method or function at all. If this definition was allowed, F# developers will be in for a dangerous surprise later. That is why compiler stops inferring generic parameters here – value restriction saves you from unexpected behavior.
+не намекает на подобное поведение. v выглядит как обыкновенное значение, а вовсе не метод и даже не функция. Если бы подобное определение было разрешено, F# разработчиков поджидал бы неприятный сюрприз. Вот поэтому компилятор перестаёт выводить здесь полиморфные параметры - ограничение на значения оберегает вас от неожиданного поведения.
 
 So when it is safe to automatically generalize? It is hard to argue precisely, but one simple answer suggests itself: generalization is safe if the expression on right-hand side of “let” both:
 
