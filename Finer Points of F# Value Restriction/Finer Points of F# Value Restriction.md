@@ -97,90 +97,92 @@
 
 не намекает на подобное поведение. v выглядит как обыкновенное значение, а вовсе не метод и даже не функция. Если бы подобное определение было разрешено, F# разработчиков поджидал бы неприятный сюрприз. Вот поэтому компилятор перестаёт выводить здесь полиморфные параметры - ограничение на значения оберегает вас от неожиданного поведения.
 
-So when it is safe to automatically generalize? It is hard to argue precisely, but one simple answer suggests itself: generalization is safe if the expression on right-hand side of “let” both:
+Итак, когда безопасно автоматическое обобщение? Сложно привести точные критерии, но напрашивается один простой ответ: обобщение безопасно, когда правая часть let-выражения одновременно:
 
-is side-effect free (also known as pure)
-produces an immutable object
-Indeed, the weird behavior of v stems from mutability of a reference cell; it is because the reference cell was mutable we cared whether we get back same or different cell from different accesses to v. If the right-hand-side of “let” is side-effect-free we know that the object we are getting is the equivalent object; since it is an immutable object, we do not care if we get a single copy or multiple copies of it between different invocations.
+1. Не содержит *побочных эффектов* (иными словами, *чистое*)
+2. Возвращает *неизменяемый объект*
 
-The two conditions above are hard – impossible - for the compiler to establish precisely. So F# compiler follows a simple and crude, but a very natural and understandable approximation: it only generalizes if it can infer purity and immutability from a syntactic structure of an expression on right-hand-side of a let. That is why:
+Действительно, причудливое поведение v возникает из-за изменяемости ссылочной ячейки; именно потому, что ссылочная ячейка изменяема, нам было важно, будет ли получена одна или разные ячейки в результате разных обращений к v. Если правая часть let-выражения не содержит побочных эффектов, мы знаем, что всегда получаем эквивалентные объекты, а так как они неизменяемы, нас не волнует, получаем ли мы оду и ту же или разные их копии во время различных вызовов.
+
+С точки зрения компилятора трудно - невозможно - точно установить вышеупомянутые условия. Поэтому компилятор использует простое и грубое, но естественное и понятное приближение: он обобщает только тогда, когда может вывести чистоту и неизменяемость из синтаксической структуры выражения в правой части let. Поэтому:
 
     let listId = fun l -> List.map id
 
-(which is what our original definition “let listId l = List.map id l” a syntactic sugar for) generalizes – right-hand-side is a closure creation; closure creations are side-effect-free and closures are immutable.
+(то, для чего наше оригинальное определение “let listId l = List.map id l” является синтаксическим сахаром) обобщается - в правой части создание замыкания; создание замыкания не содержит побочных эффектов и замыкания неизменяемы.
 
-Same for discriminated unions:
+Аналогично с непересекающимися объединениями:
 
     let q = None
     let z = []
 
-and immutable records:
+и неизменяемыми записями:
 
     type 'a r = { x : 'a; y : int }
     let r1 = { x = []; y = 1 }
 
-r1 gets a type 'a list r. However if you try to initialize some of the fields of immutable record with a function call:
+r1 получает тип 'a list r. Однако, если вы попытаетесь проинициализировать какие-либо поля неизменяемой записи вызовом функции: 
 
     let gen =
         let u = ref 0
         fun () -> u := !u + 1; !u
     let f = { x = []; y = gen() }
-f will not be generalized. In the above case gen is indeed a non-pure function; it might have been pure however, but compiler has no way of knowing, so it errs on a side of caution. For the same reason,
+
+f не будет обобщено. В примере выше gen - это безусловно грязная (non-pure) функция; она могла бы быть чистой, но компилятор не может об этом знать, поэтому он из предосторожности возвращает ошибку. По этой же причине,
 
     let listId = List.map id
-is not generalized – compiler does not know whether List.map is pure or not.
+не обобщается - компилятор не знает, чистая функция List.map или нет.
 
-The expressions that are syntactically known to a compiler to be pure and produce immutable objects are called syntactic values. That is how value restriction got its name – automatic generalization on a right-hand-side of let definition is restricted to syntactic values. F# language specification gives a definition of a full set of syntactic values, but the above discussion gives you a good idea of what that set is – pure and producing immutable objects.
+Выражения, для которых компилятор на уровне синтаксиса может определить, что они чистые и возвращают неизменяемые объекты, называются *синтаксическими значениями*. Так ограничение на значения получило своё название - *автоматическое обобщение правой части let-выражения ограничено синтаксическими значениями*. Описание языка F# содержит полный список синтаксических значений, но наше обсуждение даёт представление о том, что это за выражения - чистые и возвращающие неизменяемые объекты.
 
-The problem we are solving here is not new – all compilers of languages belonging to ML family have been using value restriction in one form or another. One feature of F# that I think is unique however is that F# allows value restriction to be suppressed by explicit type annotation, and it is actually safe in F# semantics to do so.
+Задача, которую мы здесь решаем, не нова - все компиляторы языков семейства ML используют ограничение на значения в той или иной форме. Особенностью F#, котрую я считаю уникальной, является то, что ограничение на значения можно обойти с помощью явных аннотаций типов, и это безопасно с точки зрения семантики F#.
 
-When it can be useful? The canonical example is lazy and lazy list. Typical definition of lazy (let us pretend we do not have it in the language):
+Когда это может быть полезно? Классический пример это lazy и lazy list. Типичное определение lazy (давайте притворимся, что его нет в нашем языке)
 
     type 'a LazyInner = Delayed of (unit -> 'a) | Value of 'a | Exception of exn
     type 'a Lazy = 'a LazyInner ref
     let create f = ref (Delayed f)
     let force (l : 'a Lazy) = ...
-is, on the face of it, full of side-effects; compiler does not know of a contract that exists between create and force. If we build a lazy list upon this definition of lazy in a standard way
+на первый взгляд, полно побочных эффектов; компилятору не известен контракт между create и force. Если мы построим lazy list обычным способом с помощью определения lazy
 
     type 'a cell = Nil | CCons of 'a * 'a lazylist
     and 'a lazylist = 'a cell Lazy
 
-and try to define an empty lazy list:
+и попытаемся определить пустой ленивый список:
 
     let empty = create (fun () -> Nil)
 
-value restriction won’t let us; however generic uses of an empty lazy list is perfectly legitimate; we can declare this fact by making generic type parameter explicit:
+ограничение на значения не позволит нам это сделать; однако полиморфное использование ленивого списка абсолютно законно; мы можем заявить об этом, явно указав параметр полиморфного типа:
 
     let empty<'T> : 'T lazylist = create (fun () -> Nil)
-This is enough to get the definition of empty to compile; however if we try to use it
+Этого достаточно, чтобы определение empty скомпилировалось, но если мы попытаемся его использовать:
 
     let l = empty
-compiler will complain again:
+компилятор снова возмутится:
 
     File1.fs(12,5): error FS0030: Value restriction. 
     The value 'l' has been inferred to have generic type
         val l : '_a lazylist    
-Either define 'l' as a simple data term, 
-make it a function with explicit arguments or, 
-if you do not intend for it to be generic, add a type annotation.
-Indeed, compiler knows that empty is a type function that not automatically generalizable – therefore it is not in a set of syntactic values. F# provides an escape hatch here though – we can put a [<GeneralizableValue>] attribute on a definition of empty:
+    Either define 'l' as a simple data term, 
+    make it a function with explicit arguments or, 
+    if you do not intend for it to be generic, add a type annotation.
+В самом деле, компилятор знает, что empty - это функция типа (type function), которая не подвергается автоматическому обобщению, так как она не принадлежит множеству синтаксических значений. F#, однако, предоставляет здесь лазейку - мы можем указать атрибут [<GeneralizableValue>] в определении empty: 
 
     [<GeneralizableValue>]
     let empty<'T> : 'T lazylist = create (fun () -> Nil)
-    This instructs the compiler to treat empty as a syntactic value, and “let l = empty” will compile
 
-As a matter of fact, you might occasionally found the likes of our generic v useful:
+это заставит компилятор считать empty синтаксическим значением, и "let l = empty" скомпилируется.
+
+На самом деле, иногда определения вроде нашего полиморфного v могут быть полезными:
 
     let v<'T> : 'T list ref = ref []
 
-If you end up writing a type-parametrized function returning mutable objects or having side effects, please do sprinkle a RequiresExplicitTypeArguments attribute over it:
+Если вы пишете функцию, параметризуемую типами (type-parametrized), и возвращающую изменяемые объекты или имеющую побочные эффекты, укажите атрибут RequiresExplicitTypeArguments:
 
     [<RequiresExplicitTypeArguments>]
     let v<'T> : 'T list ref = ref []
-It does what it says on tin: now you cannot write “v := [1]”, only “v<int> := [1]”, and it is (somewhat) clearer what goes on.
+Он делает именно то, что и говорит: теперь вы не можете написать “v := [1]”, только “v<int> := [1]”, и будет понятнее, что происходит на самом деле.
 
-If you got this far, I hope you now have a very solid understanding of F# value restriction, and you gained the power to control it if needed by means of explicit type annotations and GeneralizableValue attribute. With power comes responsibility however; MSDN article is quite right - those powers are rarely used in day-to-day F# programming. In my F# code, type functions appear only in cases similar to empty lazy lists from above – ground cases of data structures; in all other cases, I follow the MSDN article advice:
-
-* Constrain a type to be nongeneric by adding an explicit type annotation to a value or parameter.
-* If the problem is using a nongeneralizable construct to define a generic function, such as a function composition or incompletely applied curried function arguments, try to rewrite the function as an ordinary function definition.
-* If the problem is an expression that is too complex to be generalized, make it into a function by adding an extra, unused parameter.
+Если вы всё это уловили, я надеюсь, что у вас теперь чёткое понимание ограничения на значения в F#, и вы теперь можете при необходимости контролировать его с помощью явных аннотаций типов и аттрибута GeneralizableValue. Вместе с властью, однако, приходит и ответственность; статья на MSDN права - эти возможности редко используются в обыденном программировании на F#. В моём F# коде функции типа появляются только в случаях, аналогичных lazy list - базовых структурах данных (ground cases of data structures); во всех остальных случаях я следую советам из статьи на MSDN:
+* Ограничить тип так, чтобы он перестал быть полиморфным, добавив явную аннотацию типа к значению или параметру.
+* Если проблема в использовании необобщаемой конструкции для определения полиморфной функции, такой как композиция функций или частичное применение аргументов каррированной функции, попробуйте переписать определение функции на обыкновенное.
+* Если проблема в том, что выражение слишком сложно для обобщения, превратите его в функцию, добавив неиспользуемый параметр.
