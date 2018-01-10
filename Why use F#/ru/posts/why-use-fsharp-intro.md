@@ -1,32 +1,32 @@
 ---
 layout: post
-title: "Introduction to the 'Why use F#' series"
-description: "An overview of the benefits of F#"
+title: "Введение в цикл статей 'Зачем использовать F#?'"
+description: "Обзор преимуществ F#"
 nav: why-use-fsharp
-seriesId: "Why use F#?"
+seriesId: "Зачем использовать F#?"
 seriesOrder: 1
 ---
+Данный цикл статей расскажет вам об осовных особенностях F# и затем покажет, как F# может помочь в вашем повседневном процессе разработки.
 
-This series of posts will give you a guided tour through the main features of F# and then show you ways that F# can help you in your day-to-day development.
+### Ключевые преимущества F# перед C# ###
 
-### Key benefits of F# compared with C# ###
+Если вы уже знакомы с C# или Java, у вас может возникнуть вопрос: "Зачем учить ещё один язык программирования?". F# имеет ряд значительных преимуществ, которые можно объединить под следующими темами:
 
-If you are already familiar with C# or Java, you might be wondering why it would be worth learning yet another language. F# has some major benefits which I have grouped under the following themes:
+* **Краткость**. F# не загружен лишними конструкциями в коде, такими как фигурные скобки, точки с запятыми и т.п. Вам очень редко придётся явно указывать тип объекта, благодаря мощной системе вывода типов. И в большинстве случаев требуется меньше кода для решения той же задачи.
+* **Удобство**. Многие общие задачи программирования решаются гораздо проще с использованием F#.  Среди них такие, как создание и использование сложных объявлений типов, обработка списков, (?) сравнение и эквивалентность (?), конечные автоматы и многое другое.  А т.к. функции в F# -- объекты первого класса, становится очень просто проектировать мощный и переиспользуемый код, создавая функции, параметрами которых являются другие функции, или же комбинируя существующие функции для получения новой функциональности.
+* **Корректность**. F# имеет мощную систему типов, которая препятствует возникновению многих распространённых шибок, таких как null-исключения. В дополнение к этому, вы зачастую можете описать бизнес-логику, используя систему типов таким образом, чтобы было буквально невозможно написать ошибочный/некорректный код, т.к. при его проверке во время компиляции в нём будут обнаруживаться ошибки типизации.
+* **Параллелизм**. Для F# существует ряд встроенных инструментов и библиотек для упрощения создания программных систем, в которых несколько действий могут выполняться одновременно. Асинхронное программирование, как и параллелизм, поддерживаются непосредственно. F# также имеет систему очереди сообщений и отличные механизмы обработки событий и реактивного программирования. А неизменяемость структур данных по умолчанию позволяет гораздо проще управлять общим состоянием и избегать блокировок.
 
-* **Conciseness**. F# is not cluttered up with coding "noise" such as curly brackets, semicolons and so on. You almost never have to specify the type of an object, thanks to a powerful type inference system. And it generally takes less lines of code to solve the same problem.
-* **Convenience**. Many common programming tasks are much simpler in F#.  This includes things like creating and using complex type definitions, doing list processing, comparison and equality, state machines, and much more.  And because functions are first class objects, it is very easy to create powerful and reusable code by creating functions that have other functions as parameters, or that combine existing functions to create new functionality.
-* **Correctness**. F# has a very powerful type system which prevents many common errors such as null reference exceptions. And in addition, you can often encode business logic using the type system itself, so that it is actually impossible to write incorrect code, because it is caught at compile time as a type error.
-* **Concurrency**. F# has a number of built-in tools and libraries to help with programming systems when more than one thing at a time is happening. Asynchronous programming is directly supported, as is parallelism. F# also has a message queuing system, and excellent support for event handling and reactive programming. And because data structures are immutable by default, sharing state and avoiding locks is much easier.
-* **Completeness**.  Although F# is a functional language at heart, it does support other styles which are not 100% pure, which makes it much easier to interact with the non-pure world of web sites, databases, other applications, and so on. In particular, F# is designed as a hybrid functional/OO language, so it can do almost everything that C# can do as well.  Of course, F# integrates seamlessly with the .NET ecosystem, which gives you access to all the third party .NET libraries and tools. Finally, it is part of Visual Studio, which means you get a good editor with IntelliSense support, a debugger, and many plug-ins for unit tests, source control, and other development tasks.
+* **Полнота (Completeness)**. Хотя F#, по своей натуре, функциональный язык, он поддерживает и другие _стили/парадигмы_, которые не "чисты" на 100%, что обеспечивает гораздо более простое взаимодействие с "нечистым" миром веб-сайтов, баз данных, сторонних приложений и т.п. В частности, F# разрабатывался как гибридный функциональный/объектно-ориентированный язык, в результате чего с его помощью можно делать практически всё то же самое, что и с помощью языка C#. И конечно же, F# легко интегрируется с экосистемой .NET, что предоставляет вам доступ ко всем сторонним .NET-библиотекам и инструментам. В конечном счёте, он поставляется как компонент Visual Studio, в результате чего вы получаете хороший редактор с поддержкой IntelliSense, отладчик и множество плагинов для модульного-тестирования (юнит-тестов), контроля версий и прочих задач, встречающихся в процессе разработки.
 
-In the rest of this series of posts, I will try to demonstrate each of these F# benefits, using standalone snippets of F# code (and often with C# code for comparison).  I'll briefly cover all the major features of F#, including pattern matching, function composition, and concurrent programming.  By the time you have finished this series, I hope that you will have been impressed with the power and elegance of F#, and you will be encouraged to use it for your next project!
+В остальных статьях данной серии я попытаюсь продемонстрировать каждое из вышеперечисленных достоинств языка F#, используя отдельные фрагменты F#-кода (а, зачастую, также фрагменты C#-кода, для сравнения). Я кратко затрону каждую из основных особенностей F#, таких как сопоставление с образцом, композиция функций и конкуррентное программирование. К концу чтения данной серии статей, надеюсь, вы будете впечатлены мощью и элегантностью F#, и у вас будет стимул использовать его в вашем следующем проекте!
 
-### How to read and use the example code ###
+### Как читать и использовать примеры кода ###
 
-All the code snippets in these posts have been designed to be run interactively. I strongly recommend that you evaluate the snippets as you read each post. The source for any large code files will be linked to from the post.
+Все фрагменты кода в данных статьях были разработаны для выполнения в интерактивном режиме. Я настоятельно рекомендую запускать каждый из фрагментов кода, встречающихся в процессе чтения каждой статьи. (Какие-либо большие фрагменты кода будут помещены в отдельные файлы, а ссылки на них будут приведены в самой статье. / Ссылки на файлы с большими фрагментами кода будут приведены в статье)
 
-This series is not a tutorial, so I will not go too much into *why* the code works.  Don't worry if you cannot understand some of the details; the goal of the series is just to introduce you to F# and whet your appetitite for learning it more deeply.
+Данная серия статей не является учебником, поэтому я не буду слишком сильно углубляться в детали, наподобие "почему именно конкретный фрагмент кода работает". Не беспокойтесь если вы не можете понять некоторые аспекты; цель данной серии статей -- лишь познакомить вас с F# и раззадорить вас на его более глубокое изучение.
 
-If you have experience in languages such as C# and Java, you have probably found that you can get a pretty good understanding of source code written in other similar languages, even if you aren't familiar with the keywords or the libraries. You might ask "how do I assign a variable?" or "how do I do a loop?", and with these answers be able to do some basic programming quite quickly.
+Если у вас есть опыт в программировании на таких языках, как C# и Java, вы, вероятно, уже замечали, что можете довольно неплохо понимать исходный код, написанный на других подобных языках, даже если вы не знакомы с ключевыми словами или библиотеками. Вы можете задать себе вопрос: "Как присвоить значение переменно?" или же "Как объявить цикл?", и с такими вопросами вы сможете довольно быстро суметь запрограммировать простые вещи.
 
-This approach will not work for F#, because in its pure form there are no variables, no loops, and no objects.  Don't be frustrated - it will eventually make sense! If you want to learn F# in more depth, there are some helpful tips on the ["learning F#"](../learning-fsharp/index.md) page.
+Такой подход не сработает в случае F#, т.к. [в нём в чистом виде / в его чистом виде] не существует перменных, циклов и нет объектов. Не расстраивайтесь -- со временем это обретёт смысл! Если вы хотите изучить F# более глубоко, вы сможете найти несколько полезных советов на странице ["Изучение F#"](../learning-fsharp/index.md).
