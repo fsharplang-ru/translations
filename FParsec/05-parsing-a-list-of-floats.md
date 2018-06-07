@@ -54,10 +54,7 @@ Expecting: '['
 >```
 > Пожалуйста, загляните в [главу 5.8](http://www.quanttec.com/fparsec/users-guide/customizing-error-messages.html) руководства пользователя, чтобы узнать больше о настройке сообщений об ошибках.
 
-Если вам не нужен результат работы синтаксического анализатора и просто хотите пропустить полученный список,
 Если вы хотите пропустить последовательность не получая список результатов, то вы можете использовать оптимизированные комбинаторы [`skipMany`](http://www.quanttec.com/fparsec/reference/primitives.html#members.skipMany) и [`skipMany1`](http://www.quanttec.com/fparsec/reference/primitives.html#members.skipMany1) вместо `many` и `many1` .
-
-Если вы хотите пропустить последовательность и вам не нужен список результатов парсинга, вы можете использовать оптимизированный комбинатор [`skipMany`](http://www.quanttec.com/fparsec/reference/primitives.html#members.skipMany) и [`skipMany1`](http://www.quanttec.com/fparsec/reference/primitives.html#members.skipMany1) вместо `many` и `many1` соответственно.
 
 Другим часто используемым комбинатором для синтаксического разбора последовательностей является [`sepBy`](http://www.quanttec.com/fparsec/reference/primitives.html#members.sepBy):
 
@@ -65,17 +62,17 @@ Expecting: '['
 val sepBy: Parser<'a,'u> -> Parser<'b,'u> -> Parser<'a list, 'u>
 ```
 
-`sepBy` принимает два параметра синтаксический анализатор «элемент» и «разделитель» и возвращает синтаксический анализатор для списка элементов. В нотации РНБН `sepBy p pSep` может быть записана как `(p (pSep p)*)?`, Подобно `many`, существует [несколько вариантов](http://www.quanttec.com/fparsec/reference/primitives.html#interface.sepBy-parsers)<sup>en</sup> `sepBy`.
+`sepBy` принимает два параметра синтаксический анализатор «элемент» и «разделитель» и возвращает синтаксический анализатор для списка элементов. В нотации РНБН `sepBy p pSep` может быть записана как `(p (pSep p)*)?`. Подобно `many`, существует [несколько вариантов](http://www.quanttec.com/fparsec/reference/primitives.html#interface.sepBy-parsers)<sup>en</sup> `sepBy`.
 
-С помощью `sepBy` мы можем сделать синтаксический разбор более реального формата списка чисел, где числа с плавающей точкой разделены запятой. Формате РНБН:
+С помощью `sepBy` мы можем сделать синтаксический разбор более реального формата списка чисел, где числа с плавающей точкой разделены запятой. Запись в формате РНБН:
 
 ```EBNF
 floatList: "[" (float ("," float)*)? "]"
 ```
 
-Допустимыми строками в этом формате являются, например: `"[]"`, `"[1.0]"`, `"[2,3,4]"`.
+Допустимыми строками являются, например: `"[]"`, `"[1.0]"`, `"[2,3,4]"`.
 
-Дословной реализацией этого формата будет следующий синтаксический анализатор:
+Дословной реализацией будет следующий синтаксический анализатор:
 
 ```fsharp
 let floatList = str "[" >>. sepBy pfloat (str ",") .>> str "]"
