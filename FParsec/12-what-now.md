@@ -1,0 +1,3 @@
+# Куда дальше?
+
+If this tutorial has whet your appetite for a more in-depth introduction to FParsec, just head over to the [user's guide](http://www.quanttec.com/fparsec/users-guide/). If you can't wait to write your own parser, then bookmark the [parser overview](http://www.quanttec.com/fparsec/reference/parser-overview.html) page, maybe take a short look at the example parsers in the **Samples** folder and just start hacking. You can always consult the user's guide at a later point should you get stuck somewhere.
